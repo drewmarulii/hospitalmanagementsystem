@@ -19,59 +19,7 @@
             </div>
             @endif
 
-            <!-- Summary Card -->
-            <div class="row">
-            <div class="col-sm">
-                <div class="small-box bg-primary">
-                <div class="inner">
-                <h4>50</h4>
-                    <p>New Appointment</p>
-                </div>
-                <div class="icon">
-                <i class="ion ion-android-people"></i>
-                </div>
-                </div>
-            </div>
-            <div class="col-sm">
-            <div class="small-box bg-info">
-                <div class="inner">
-                <h4>50</h4>
-                <p>On-Treatment</p>
-                </div>
-                <div class="icon">
-                <i class="ion ion-android-people"></i>
-                </div>
-            </div>
-            </div>
-            <div class="col-sm">
-            <div class="small-box bg-warning">
-                <div class="inner">
-                <h4>50</h4>
-                <p>Cancelled</p>
-                </div>
-                <div class="icon">
-                <i class="ion ion-android-people"></i>
-                </div>
-            </div>
-            </div>
-            <div class="col-sm">
-            <div class="small-box bg-success">
-                <div class="inner">
-                <h4>50</h4>
-                <p>Finished</p>
-                </div>
-                <div class="icon">
-                <i class="ion ion-android-people"></i>
-                </div>
-            </div>
-            </div>
-            </div>
-            <!-- End Summary Card -->
-
             <div class="card">
-                    <div class="card-header">
-                        Get Patient Transaction
-                    </div>
                 <div class="card-body">
                     <table id="medicineOrder" class="table table-striped" style="width:100%">
                         <thead class="bg-light" style="width: 100%;">
@@ -83,7 +31,7 @@
                                 <th>Status</th>
                                 <th>Date</th>
                                 <th>Physician</th>
-                                <th style="width: 120px;">Action</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -106,7 +54,7 @@
                                     <a type="button" class="btn btn-warning btn-sm text-light" data-toggle="modal" data-target="#modal-{{$detail->APPOINTMENT_ID }}">
                                         {{$detail->APPOINTMENT_ID}}
                                     </a>  
-                                    @elseif($detailx->APPOINTMENT_STATUS =='NEW')         
+                                    @elseif($detail->APPOINTMENT_STATUS =='NEW')         
                                     <a type="button" class="btn btn-primary btn-sm text-light" data-toggle="modal" data-target="#modal-{{$detail->APPOINTMENT_ID }}">
                                         {{$detail->APPOINTMENT_ID}}
                                     </a>  
@@ -114,7 +62,7 @@
                                 </td>
                                 <td>{{$detail->APPOINTMENT_STATUS}}</td>
                                 <td><?php echo(date('d M Y', strtotime($detail->APP_DATE))); ?></td>
-                                <td>Dr. {{$detail->user_fname}} {{$detail->user_mname}} {{$detail->user_lname}}</td>
+                                <td>Dr. {{$detail->user_fname}} {{$detail->user_lname}}</td>
                                 <td>
                                     <a href="{{ url('/createInvoice/'.$detail->PATIENT_ID.'/'.$detail->RECORD_ID) }}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Create Invoice</a>
                                 </td>

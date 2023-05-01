@@ -14,6 +14,12 @@
         <div class="row">
           <div class="col">
 
+          @if(session('status'))
+            <div class="alert alert-success">
+                {{ session('status') }}
+            </div>
+            @endif
+
             <div class="card">
             <div class="card-header bg-dark">
                User Profile Information
@@ -63,16 +69,7 @@
                 <p class="text-muted mb-0">{{$userlist[0]->username}}</p>
               </div>
             </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Password</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0"><a href="{{ url('/user/'.$userlist[0]->userid.'/cpw') }}"><u>Change Password</u></a></p>
-              </div>
-            </div>
-            <hr>
+             <hr>
             <div class="row">
               <div class="col-sm-3">
                 <p class="mb-0">Email</p>

@@ -12,7 +12,7 @@
 
 
               <li class="nav-item">
-                <a href="{{ url('adduseraccount') }}" class="nav-link">
+                <a href="{{ url('createaccount') }}" class="nav-link">
                 <i class="fas fa-user-plus nav-icon text-light"></i>
                   <p class="text-light">User Registration</p>
                 </a>
@@ -96,12 +96,6 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-                <a href="{{ url('profile') }}" class="nav-link">
-                <i class="fas fa-user nav-icon text-light"></i>
-                  <p class="text-light">My Profile</p>
-                </a>
-              </li>
 
           <li class="nav-header text-light">APPOINTMENT</li>
               <li class="nav-item">
@@ -122,14 +116,6 @@
                   <p class="text-light">Medical Record</p>
                 </a>
               </li>
-
-          <li class="nav-header text-light">PHYSICIAN</li>
-              <li class="nav-item">
-                <a href="{{ url('physician') }}" class="nav-link">
-                <i class="fas fa-calendar-plus nav-icon text-light"></i>
-                  <p class="text-light">Physician Information</p>
-                </a>
-              </li>
         @endif
 
         @if($user->level=='R004')
@@ -142,12 +128,6 @@
               </p>
             </a>
           </li>
-          <li class="nav-item">
-                <a href="{{ url('profile') }}" class="nav-link">
-                <i class="fas fa-user nav-icon text-light"></i>
-                  <p class="text-light">My Profile</p>
-                </a>
-              </li>
 
           <li class="nav-header text-light">MEDICINE</li>
               <li class="nav-item">
@@ -176,13 +156,6 @@
             </a>
           </li>
 
-          <li class="nav-item">
-                <a href="{{ url('profile') }}" class="nav-link">
-                <i class="fas fa-user nav-icon text-light"></i>
-                  <p class="text-light">My Profile</p>
-                </a>
-              </li>
-
           <li class="nav-header text-light">INVOICE</li>
               <li class="nav-item">
                 <a href="{{ url('invoices') }}" class="nav-link">
@@ -192,8 +165,20 @@
               </li>
               <li class="nav-item">
                 <a href="{{ url('mnginvoices') }}" class="nav-link">
-                <i class="fas fa-file-invoice nav-icon text-light"></i>
+                <i class="fas fa-file-invoice-dollar nav-icon text-light"></i>
                   <p class="text-light">Manage Invoice</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('treatmentitem') }}" class="nav-link">
+                <i class="fas fa-list nav-icon text-light"></i>
+                  <p class="text-light">Treatment Item</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ url('invoiceitem') }}" class="nav-link">
+                <i class="fas fa-list nav-icon text-light"></i>
+                  <p class="text-light">Invoice Item</p>
                 </a>
               </li>
         @endif

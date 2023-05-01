@@ -8,8 +8,9 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class Roles extends Model
 {
-    // use HasFactory;
     public $table = 'roles';
+    protected $primaryKey = 'role_id';
+    protected $keyType = 'string';
 
     public static function boot()
     {

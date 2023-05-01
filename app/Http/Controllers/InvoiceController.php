@@ -11,6 +11,7 @@ use App\Models\InvoiceItem;
 use App\Models\MedicalRecord;
 use App\Models\OrderMedicine;
 use App\Models\Appointment;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -24,7 +25,8 @@ class InvoiceController extends Controller
         ->join('appointments','patient.PATIENT_ID','=','appointments.PATIENTID')
         ->join('users','appointments.DOCTOR_ID','=','users.userid')
         ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
-        ->where('APPOINTMENT_STATUS','=','FIN-UNPAID')
+        ->where('APPOINTMENT_STATUS','=','FINISH')
+        ->where('is_invoice','=',0)
         ->get();
 
         return view('efinance.getTransaction')->with('status', '')->with('user', $user)->with('transaction', $transaction);
@@ -75,20 +77,15 @@ class InvoiceController extends Controller
         $invoice->INVOICE_AMOUNT = 0;
         $invoice->PATIENTID = $patient;
         $invoice->save();
+
+        $getInvoice = Invoice::latest('created_at')->where('PATIENTID', $patient)->first();
+        $invoiceID = $getInvoice->INVOICE_ID;
         
         $data = $request->except('_token');
         $itemID = $data['ITEM_ID'];
-        foreach($itemID as $key => $input) {
-            $invoiceID = DB::table('invoices')
-                ->select('INVOICE_ID')
-                ->join('patient','invoices.PATIENTID','=','patient.PATIENT_ID')
-                ->join('appointments','patient.PATIENT_ID','=','appointments.PATIENTID')
-                ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
-                ->where('RECORD_ID','=',$medrec)
-                ->first();
-            $getID = $invoiceID->INVOICE_ID;           
+        foreach($itemID as $key => $input) {       
             $invItem = new InvoiceItem;
-            $invItem->INVOICEID = $getID;
+            $invItem->INVOICEID = $invoiceID;
             $invItem->ITEMID = $data['ITEM_ID'][$key];
             $invItem->save();
         }
@@ -97,16 +94,9 @@ class InvoiceController extends Controller
         ->select('TRECEIVED_ID')
         ->where('MEDRECID','=',$medrec)
         ->count('TRECEIVED_ID');
+        
         for ($i = 1; $i <= $countTreatment; $i++) {
-            $invoiceID = DB::table('invoices')
-                ->select('INVOICE_ID')
-                ->join('patient','invoices.PATIENTID','=','patient.PATIENT_ID')
-                ->join('appointments','patient.PATIENT_ID','=','appointments.PATIENTID')
-                ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
-                ->where('RECORD_ID','=',$medrec)
-                ->first();
-            $getID = $invoiceID->INVOICE_ID;
-            $hello = Treceived::where(['MEDRECID' => $medrec])->update(['INVOICEID' => $getID]);
+            $hello = Treceived::where(['MEDRECID' => $medrec])->update(['INVOICEID' => $invoiceID]);
         }
 
         $countMedicine = DB::table('ordermedicine')
@@ -114,19 +104,23 @@ class InvoiceController extends Controller
         ->where('MEDRECID','=',$medrec)
         ->where('ORD_STATUS','=','BOOKED')
         ->count('MED_ORDER_ID');
-        for ($i = 1; $i <= $countMedicine; $i++) {
-            $invoiceID = DB::table('invoices')
-                ->select('INVOICE_ID')
-                ->join('patient','invoices.PATIENTID','=','patient.PATIENT_ID')
-                ->join('appointments','patient.PATIENT_ID','=','appointments.PATIENTID')
-                ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
-                ->where('RECORD_ID','=',$medrec)
-                ->first();
-            $getID = $invoiceID->INVOICE_ID;
-            $hello = OrderMedicine::where(['MEDRECID' => $medrec])->update(['INVOICEID' => $getID]);
-        }
 
-        return redirect('/showInvoice/'.$patient.'/'.$medrec.'/'.$getID.'/generate')->with('user', $user);
+        for ($i = 1; $i <= $countMedicine; $i++) {
+            $hello = OrderMedicine::where(['MEDRECID' => $medrec])->update(['INVOICEID' => $invoiceID]);
+        }
+        
+        $appointment = DB::table('appointments')
+        ->select('appointments.APPOINTMENT_ID')
+        ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
+        ->where('RECORD_ID','=',$medrec)
+        ->first();
+
+        $id = $appointment->APPOINTMENT_ID;
+        $getAppID = Appointment::find($id);
+        $getAppID->is_invoice = 1;
+        $getAppID->update();
+
+        return redirect('/showInvoice/'.$patient.'/'.$medrec.'/'.$invoiceID.'/generate')->with('user', $user);
     }
 
     public function storeInvoice($patient, $medrec, $invID) {
@@ -142,6 +136,7 @@ class InvoiceController extends Controller
         ->select('MED_PRICE')
         ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
         ->where('INVOICEID','=',$invID)
+        ->where('ORD_STATUS','=','BOOKED')
         ->sum('MED_PRICE');
 
         $getItemPrice = DB::table('item')
@@ -154,17 +149,7 @@ class InvoiceController extends Controller
         $totalPrice = $getTreatmentPrice+$getMedicinePrice+$getItemPrice;
         $getInvoice->INVOICE_AMOUNT = $totalPrice;
         $getInvoice->update();
-
-        $appointment = DB::table('appointments')
-        ->select('appointments.APPOINTMENT_ID')
-        ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
-        ->where('RECORD_ID','=',$medrec)
-        ->first();
-        $id = $appointment->APPOINTMENT_ID;
-        $getAppID = Appointment::find($id);
-        $getAppID->APPOINTMENT_STATUS = 'WAIT-PAYMENT';
-        $getAppID->update();
-        
+       
         return redirect('/showInvoice/'.$patient.'/'.$invID.'/show')->with('user', $user);
     }
     
@@ -182,6 +167,7 @@ class InvoiceController extends Controller
         $medicineBill = DB::table('medicine')
         ->select('MEDICINE_NAME', 'MED_PRICE', 'MED_ORDER_ID', 'QUANTITY', 'MED_PACKTYPE')
         ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
+        ->where('ORD_STATUS','=','BOOKED')
         ->where('INVOICEID','=',$invID)
         ->get();
         $itemBill = DB::table('item')
@@ -190,26 +176,32 @@ class InvoiceController extends Controller
         ->where('INVOICEID','=',$invID)
         ->get();
 
+        $payment = Payment::where('INVOICEID', $invID)->first();
+
         $getTreatmentPrice = DB::table('treatmentlist')
         ->select('TREATMENT_PRICE')
         ->join('treceived','treatmentlist.TREATMENT_ID','=','treceived.TREATMENT_ID')
         ->where('INVOICEID','=',$invID)
         ->sum('TREATMENT_PRICE');
+        
         $getMedicinePrice = DB::table('medicine')
         ->select('MED_PRICE')
         ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
         ->where('INVOICEID','=',$invID)
+        ->where('ORD_STATUS','=','BOOKED')
         ->sum('MED_PRICE');
+        
         $getItemPrice = DB::table('item')
         ->select('ITEM_PRICE')
         ->join('invoiceitem','item.ITEM_ID','=','invoiceitem.ITEMID')
         ->where('INVOICEID','=',$invID)
         ->sum('ITEM_PRICE');
+        
         $totalPrice = $getTreatmentPrice+$getMedicinePrice+$getItemPrice;
 
         return view('efinance.showInvoice')->with('status', 'Invoice Has Been Added')->with('user', $user)->with('patientDetail', $patientDetail)
             ->with('invoice', $invoice)->with('treatmentBill', $treatmentBill)->with('medicineBill', $medicineBill)->with('itemBill', $itemBill)
-            ->with('totalprice', $totalPrice);
+            ->with('totalprice', $totalPrice)->with('payment', $payment);
     }
 
     public function manageInvoice()
@@ -233,6 +225,49 @@ class InvoiceController extends Controller
     public function storePayment(Request $request, $patient, $invID)
     {
         $user = Auth::user();
+
+        $validatedData = $request->validate([
+            'PAYMENT_PROOF_FILE' => 'file|mimes:jpg,png|max:2048',
+        ]);
+
+        $getTreatmentPrice = DB::table('treatmentlist')
+        ->select('TREATMENT_PRICE')
+        ->join('treceived','treatmentlist.TREATMENT_ID','=','treceived.TREATMENT_ID')
+        ->where('INVOICEID','=',$invID)
+        ->sum('TREATMENT_PRICE');
+        $getMedicinePrice = DB::table('medicine')
+        ->select('MED_PRICE')
+        ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
+        ->where('INVOICEID','=',$invID)
+        ->sum('MED_PRICE');
+        $getItemPrice = DB::table('item')
+        ->select('ITEM_PRICE')
+        ->join('invoiceitem','item.ITEM_ID','=','invoiceitem.ITEMID')
+        ->where('INVOICEID','=',$invID)
+        ->sum('ITEM_PRICE');
+        $totalPrice = $getTreatmentPrice+$getMedicinePrice+$getItemPrice;
+        $moneyPaid= $request->AMOUNT_PAID;
+        $key = (float) str_replace(',', '', $moneyPaid);
+        $exchange = $key-$totalPrice;
+
+        $payment = new Payment;
+        $payment->AMOUNT_PAID = $key;
+        $payment->INVOICEID = $invID;
+        $payment->PAYMENT_METHOD = $request->PAYMENT_METHOD;
+        $payment->EXCHANGE = $exchange;
+        if($request->hasfile('PAYMENT_PROOF_FILE'))
+        {
+            $file = $request->file('PAYMENT_PROOF_FILE');
+            $extention = $file->getClientOriginalExtension();
+            $filename = $invID.".".$extention;
+            $file->move('uploads/payment/',$filename);
+            $payment->PAYMENT_PROOF_FILE=$filename;
+        }
+        $payment->save();
+
+        $getInvoice = Invoice::find($invID);
+        $getInvoice->INVOICE_STATUS = 'PAID';
+        $getInvoice->update();
 
         return redirect('/showInvoice/'.$patient.'/'.$invID.'/show')->with('user', $user)->with('status', 'Payment has been Made');
     }

@@ -1,104 +1,71 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Select Dropdown Example in PHP</title>
-  <style>
-    .container {
-      max-width: 350px;
-      margin: 50px auto;
-      text-align: center;
-    }
-    input[type="submit"] {
-      margin-bottom: 20px;
-    }
-    .select-block {
-      width: 300px;
-      margin: 110px auto 30px;
-      position: relative;
-    }
-    select {
-      width: 100%;
-      height: 50px;
-      font-size: 100%;
-      font-weight: bold;
-      cursor: pointer;
-      border-radius: 0;
-      background-color: #1A33FF;
-      border: none;
-      border: 2px solid #1A33FF;
-      border-radius: 4px;
-      color: white;
-      appearance: none;
-      padding: 8px 38px 10px 18px;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      transition: color 0.3s ease, background-color 0.3s ease, border-bottom-color 0.3s ease;
-    }
-    /* For IE <= 11 */
-    select::-ms-expand {
-      display: none;
-    }
-    .selectIcon {
-      top: 7px;
-      right: 15px;
-      width: 30px;
-      height: 36px;
-      padding-left: 5px;
-      pointer-events: none;
-      position: absolute;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-    .selectIcon svg.icon {
-      transition: fill 0.3s ease;
-      fill: white;
-    }
-    select:hover,
-    select:focus {
-      color: #000000;
-      background-color: white;
-    }
-    select:hover~.selectIcon,
-    select:focus~.selectIcon {
-      background-color: white;
-    }
-    select:hover~.selectIcon svg.icon,
-    select:focus~.selectIcon svg.icon {
-      fill: #1A33FF;
-    }
-  </style>
-</head>
-<body>
-  <div class="container mt-5">
-    <form action="" method="post" class="mb-3">
-      <div class="select-block">
-        <select name="Fruit">
-          <option value="" disabled selected>Choose option</option>
-          <option value="Apple">Apple</option>
-          <option value="Banana">Banana</option>
-          <option value="Coconut">Coconut</option>
-          <option value="Blueberry">Blueberry</option>
-          <option value="Strawberry">Strawberry</option>
-        </select>
-        <div class="selectIcon">
-          <svg focusable="false" viewBox="0 0 104 128" width="25" height="35" class="icon">
-            <path d="m2e1 95a9 9 0 0 1 -9 9 9 9 0 0 1 -9 -9 9 9 0 0 1 9 -9 9 9 0 0 1 9 9zm0-3e1a9 9 0 0 1 -9 9 9 9 0 0 1 -9 -9 9 9 0 0 1 9 -9 9 9 0 0 1 9 9zm0-3e1a9 9 0 0 1 -9 9 9 9 0 0 1 -9 -9 9 9 0 0 1 9 -9 9 9 0 0 1 9 9zm14 55h68v1e1h-68zm0-3e1h68v1e1h-68zm0-3e1h68v1e1h-68z"></path>
-          </svg>
+@extends('layout')
+
+@section('content')
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+
+            <div class="card">
+            <div class="card-body">
+            <div>
+                <img src="{{ asset('dist/img/logo.png') }} " class="brand-image">
+                <span class="brand-text font-weight-light"><strong> Adventist Hospital</strong> | Appointment Card</span>
+            </div>
+            <hr class="hr hr-blurry" style="border: none; border-bottom: 2px solid gray;" />
+
+            <div class="row mb-3">
+                <div class="col-sm">
+                    <h5><span class="float-right p-1"></span></h5>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>Patient</p>
+                </div>
+                <div class="col-sm-8">
+                : 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>Date</p>
+                </div>
+                <div class="col-sm-8">
+                : 
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>Physician</p>
+                </div>
+                <div class="col-sm-8">
+                <p class="mb-0">: Dr. <p>
+                <small class="ml-2"></small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <p>Room</p>
+                </div>
+                <div class="col-sm-8">
+                : 4
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-sm">
+                <a href="" type="button" class="btn btn-outline-primary float-right">Print</a>
+                <a href="" type="button" class="btn btn-outline-dark mr-2 float-right">Send Email</a>
+                </div>
+            </div>
+            </div>
+            </div>
+            </div>
+      
+
+            </div>
         </div>
-      </div>
-      <input type="submit" name="submit" vlaue="Choose options">
-    </form>
-    <?php
-      if(isset($_POST['submit'])){
-        if(!empty($_POST['Fruit'])) {
-          $selected = $_POST['Fruit'];
-          echo 'You have chosen: ' . $selected;
-        } else {
-          echo 'Please select the value.';
-        }
-      }
-    ?>
-  </div>
-</body>
-</html>
+    </div>
+</div>
+@endsection

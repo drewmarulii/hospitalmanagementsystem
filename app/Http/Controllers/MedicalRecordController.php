@@ -10,8 +10,10 @@ use App\Models\Patient;
 use App\Models\Treceived;
 use App\Models\Medicine;
 use App\Models\OrderMedicine;
+use App\Models\User;
 use Auth;
 use DB;
+use PDF;
 use Carbon\Carbon;
 
 class MedicalRecordController extends Controller
@@ -104,7 +106,7 @@ class MedicalRecordController extends Controller
         }
 
         //Update Status APPOINTMENT
-        $appointment->APPOINTMENT_STATUS = 'FIN-UNPAID';
+        $appointment->APPOINTMENT_STATUS = 'WAIT-MEDICINE';
         $appointment->update();
         
         return redirect('/medicalSummary/'.$id)->with('status', 'Medical Record Added!');
@@ -114,19 +116,14 @@ class MedicalRecordController extends Controller
     {
         $user = Auth::user();
         $newMedical = MedicalRecord::where('APPOINTMENT_ID', $id)->first();
-        
-        $patientINFO = DB::table('medicalrecord')
-        ->select('medicalrecord.RECORD_ID', 'appointments.APPOINTMENT_ID', 'patient.*', 'users.user_fname', 'users.user_mname', 'users.user_lname')
-        ->join('appointments','medicalrecord.APPOINTMENT_ID','=','appointments.APPOINTMENT_ID')
-        ->join('patient','appointments.PATIENTID','=','patient.PATIENT_ID')
-        ->join('users','appointments.DOCTOR_ID','=','users.userid')
-        ->where('appointments.APPOINTMENT_ID','=', $id)
-        ->get();
+        $appointment = Appointment::where('APPOINTMENT_ID', $id)->first();
+        $patientID = $appointment->PATIENTID;
+        $getPatient = Patient::where('PATIENT_ID', $patientID)->first();
 
         $medicalID = $newMedical->RECORD_ID;
 
         return view('cphysician.medicalsummary')->with('status', 'Medical Record Added!')->with('user', $user)->with('newMedical', $newMedical)
-            ->with('patientINFO', $patientINFO);
+            ->with('getPatient', $getPatient);
     }
 
     public function cancel($id) 
@@ -152,4 +149,65 @@ class MedicalRecordController extends Controller
 
         return view('cphysician.mymedicalrecord')->with('user', $user)->with('medRECORD', $medRECORD);
     }
+
+    public function exportPDF($id)
+    {
+        $medical = MedicalRecord::find($id);
+        $appID = $medical->APPOINTMENT_ID;
+        $appointment = Appointment::find($appID);
+        $getPhysician = $appointment->DOCTOR_ID;
+        $getPatient = $appointment->PATIENTID;
+        $patient = Patient::find($getPatient);
+        $physician = User::find($getPhysician);
+        $treatments =  DB::table('treceived')
+                        ->join('treatmentlist', 'treceived.TREATMENT_ID', '=', 'treatmentlist.TREATMENT_ID')
+                        ->select('treceived.*', 'treatmentlist.*')
+                        ->where('MEDRECID', '=', $id)
+                        ->get();
+        $medicines =  DB::table('ordermedicine')
+                        ->join('medicine', 'ordermedicine.MEDICINE', '=', 'medicine.MEDICINE_ID')
+                        ->select('ordermedicine.*', 'medicine.*')
+                        ->where('MEDRECID', '=', $id)
+                        ->get();
+
+        if ($patient->PAT_GENDER=="Male") {
+            $title = "Mr.";
+        } else if ($patient->PAT_GENDER=="Female") {
+            $title = "Mrs.";
+        }  
+
+        $pdf = PDF::loadView('pdf.pdf', [
+            'logo' => public_path('logo1.png'),
+            'medrec' => $id,
+            'date' => $medical->MEDREC_DATE,
+            'appointment' => $appointment->APPOINTMENT_ID,
+            'status' => $appointment->APPOINTMENT_STATUS,
+            'physicianFNAME' => $physician->user_fname,
+            'physicianMNAME' => $physician->user_mname,
+            'physicianLNAME' => $physician->user_lname,
+            'patientID' => $patient->PATIENT_ID,
+            'patientFNAME' => $patient->PAT_FNAME,
+            'patientMNAME' => $patient->PAT_MNAME,
+            'patientLNAME' => $patient->PAT_LNAME,
+            'patientTitle' => $title,
+            'phoneNumber' => $patient->PAT_PHONENUMBER,
+            'patientADDRESS' => $patient->PAT_ADDRESS,
+            'patientCITY' => $patient->PAT_CITY,
+            'patientCOUNTRY' => $patient->PAT_COUNTRY,
+            'complaints' => $medical->MEDREC_COMPLAINTS,
+            'diagnosis' => $medical->MEDREC_DIAGNOSIS,
+            'weight' => $medical->VS_WEIGHT,
+            'height' => $medical->VS_HEIGHT,
+            'temperature' => $medical->VS_TEMPERATURE,
+            'heartrate' => $medical->VS_TEMPERATURE,
+            'systolic' => $medical->VS_SYSTOLIC,
+            'diastolic' => $medical->VS_DIASTOLIC,
+            'respiration' => $medical->VS_RESPIRATION,
+            'treatment' => $treatments,
+            'medicine' => $medicines
+        ]);
+
+        return $pdf->stream('MEDREC '.$id.'.pdf');
+    }
+
 }

@@ -14,61 +14,6 @@
         <div class="row">
             <div class="col">
 
-            <!-- Summary Card -->
-                <div class="row">
-
-                <div class="col-sm">
-                    <div class="small-box bg-primary">
-                    <div class="inner">
-                    <h4>50</h4>
-                        <p>New Appointment</p>
-                    </div>
-                    <div class="icon">
-                    <i class="ion ion-android-people"></i>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-sm">
-                <div class="small-box bg-info">
-                    <div class="inner">
-                    <h4>50</h4>
-                    <p>On-Treatment</p>
-                    </div>
-                    <div class="icon">
-                    <i class="ion ion-android-people"></i>
-                    </div>
-                </div>
-                </div>
-
-                <div class="col-sm">
-                <div class="small-box bg-warning">
-                    <div class="inner">
-                    <h4>50</h4>
-                    <p>Cancelled</p>
-                    </div>
-                    <div class="icon">
-                    <i class="ion ion-android-people"></i>
-                    </div>
-                </div>
-                </div>
-
-                <div class="col-sm">
-                <div class="small-box bg-success">
-                    <div class="inner">
-                    <h4>50</h4>
-                    <p>Finished</p>
-                    </div>
-                    <div class="icon">
-                    <i class="ion ion-android-people"></i>
-                    </div>
-                </div>
-                </div>
-                
-                </div>
-                <!-- End Summary Card -->
-
-
                 <div class="card">
                     <div class="card-header">
                         Medicine Request List
@@ -83,7 +28,7 @@
                                 <th>PAT ID</th>
                                 <th>Patient</th>
                                 <th>AppointmentID</th>
-                                <th>Physician</th>
+                                <th>Status</th>
                                 <th style="width: 120px;">Action</th>
                             </tr>
                         </thead>
@@ -101,7 +46,7 @@
                                     <a type="button" class="btn btn-success btn-sm text-light" data-toggle="modal" data-target="#modal-{{$medItems->APPOINTMENT_ID }}">
                                         {{$medItems->APPOINTMENT_ID}}
                                     </a>
-                                    @elseif($medItems->APPOINTMENT_STATUS =='FIN-UNPAID')         
+                                    @elseif($medItems->APPOINTMENT_STATUS =='WAIT-MEDICINE')         
                                     <a type="button" class="btn btn-info btn-sm text-light" data-toggle="modal" data-target="#modal-{{$medItems->APPOINTMENT_ID }}">
                                         {{$medItems->APPOINTMENT_ID}}
                                     </a>
@@ -115,11 +60,9 @@
                                     </a>  
                                     @endif
                                 </td>
-                                <td>Dr. {{$medItems->user_fname}} {{$medItems->user_mname}} {{$medItems->user_lname}}</td>
+                                <td>{{$medItems->APPOINTMENT_STATUS}}</td>
                                 <td>
-                                    <a href="{{ url('/medOrderID/'.$medItems->RECORD_ID) }}" class="btn btn-primary btn-sm" role="button" aria-pressed="true"><i class="fas fa-eye"></i></a>
-                                    <a href="#" class="btn btn-warning btn-sm" role="button" aria-pressed="true"><i class="fas fa-pen"></i></a>
-                                    <a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true"><i class="fas fa-trash"></i></a>
+                                    <a href="{{ url('/medOrderID/'.$medItems->RECORD_ID) }}" class="btn btn-primary btn-sm" role="button" aria-pressed="true"><i class="fas fa-eye"></i> View Details</a>
                                 </td>
                             </tr>
                             <!-- Modal -->

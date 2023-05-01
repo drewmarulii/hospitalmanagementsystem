@@ -21,7 +21,7 @@
             <div class="col-2">
 
             <div class="d-flex flex-wrap align-items-center text-center">
-                <a href="/physician/{{ $physicians->userid }}" style="text-decoration:none">
+                <a href="{{url('/physician/'.$physicians->userid)}}" style="text-decoration:none">
                     <div id="doctorcard" class="m-2 card card-con">
                     <div class="thumb-lg member-thumb mx-auto">
                             @if($physicians->user_pp)

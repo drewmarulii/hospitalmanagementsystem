@@ -92,10 +92,10 @@
                 <div class="row">
 
                   <div class="col-sm">
-                    <div class="small-box bg-primary">
+                    <div class="small-box bg-dark">
                       <div class="inner">
-                      <h4>50</h4>
-                        <p>New Appointment</p>
+                      <h4>{{$appointment->count()}}</h4>
+                        <p>Total Appointment</p>
                       </div>
                       <div class="icon">
                       <i class="ion ion-android-people"></i>
@@ -104,10 +104,10 @@
                   </div>
 
                   <div class="col-sm">
-                  <div class="small-box bg-info">
+                  <div class="small-box bg-primary">
                     <div class="inner">
-                    <h4>50</h4>
-                      <p>On-Treatment</p>
+                    <h4>{{$new->count()}}</h4>
+                      <p>New</p>
                     </div>
                     <div class="icon">
                       <i class="ion ion-android-people"></i>
@@ -120,10 +120,10 @@
                 <div class="row">
 
                   <div class="col-sm">
-                    <div class="small-box bg-primary">
+                    <div class="small-box bg-warning">
                       <div class="inner">
-                      <h4>50</h4>
-                        <p>New Appointment</p>
+                      <h4>{{$inProgress->count()}}</h4>
+                        <p>In-Progress</p>
                       </div>
                       <div class="icon">
                       <i class="ion ion-android-people"></i>
@@ -132,10 +132,10 @@
                   </div>
 
                   <div class="col-sm">
-                  <div class="small-box bg-info">
+                  <div class="small-box bg-success">
                     <div class="inner">
-                    <h4>50</h4>
-                      <p>On-Treatment</p>
+                    <h4>{{$finish->count()}}</h4>
+                      <p>Finish</p>
                     </div>
                     <div class="icon">
                       <i class="ion ion-android-people"></i>
@@ -145,6 +145,19 @@
 
                 </div>  
                 <!-- End Action Card -->
+
+
+                  <div class="small-box bg-info">
+                  
+                    <div class="inner">
+                    <?php echo(date('d M Y', strtotime($today))); ?>
+                    <h4>Today's Appointment
+                      <span class="float-right mr-3">{{$todayAppointment->count()}}</span></h4>
+                    </div>
+                    <div class="icon">
+                      <i class="ion ion-android-people"></i>
+                    </div>
+                  </div>
 
               </div>
 
@@ -163,7 +176,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($appcard as $appointments) 
+                        @foreach($appointment as $appointments) 
                         <tr>
                             <td>{{$appointments->APPOINTMENT_ID}}</td>
                             <td>{{$appointments->APP_DATE}}</td>

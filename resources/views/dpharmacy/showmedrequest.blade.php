@@ -15,6 +15,11 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
+            @if(session('status'))
+            <div class="alert alert-success">
+            {{ session('status') }}
+            </div>
+            @endif
 
             <div class="row">
                 <div class="col-8">
@@ -24,8 +29,7 @@
                     <div>
                         <img src="{{ asset('dist/img/logo.png') }} " class="brand-image">
                         <span class="brand-text font-weight-light"><strong> Adventist Hospital</strong> Medicine Prescription</span>
-                        <button type="button" class="btn btn-outline-primary float-right">Export PDF</button>
-                        <button type="button" class="btn btn-outline-dark float-right mr-2">Send Email</button>
+                        <a href="{{url('/MedicinePrescription/'.$recID.'/PDF')}}" type="button" class="btn btn-outline-primary float-right" target="_blank">Export PDF</a>
                     </div>
                     <hr class="hr hr-blurry" style="border: none; border-bottom: 2px solid gray;" />
 
@@ -70,6 +74,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-sm-3">
+                                    <p class="mb-0">Status</p>
+                                </div>
+                                <div class="col-sm-9">
+                                    <p class="mb-0">: {{$detail->APPOINTMENT_STATUS}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-3">
                                     <p class="mb-0">Physician</p>
                                 </div>
                                 <div class="col-sm-9">
@@ -109,7 +121,7 @@
                                         <p class="mb-0">: {{$detail->APPOINTMENT_ID}}</p>
                                     </div>
                                     </div>
-                                    <hr>
+                                    <hr>                                 
                                     <div class="row">
                                     <div class="col-sm-3">
                                         <p class="mb-0"><strong>PATIENT</strong></p>
@@ -157,11 +169,13 @@
                             <!-- End Modal -->
 
                         </div>
-                        <div class="col text-right">
+                        <div class="col">
                         <!-- Start -->
+                        <div class="row text-right">
+                        <h5 class="card-title "><b>Patient Information</b></h5>
+                        </div>
                         <div class="row">
-                        <h5 class="card-title text-right"><b>Patient Information</b></h5>
-                        <p class="mb-0">{{$detail->PATIENTID}}</p>
+                        <p class="mb-0 ">{{$detail->PATIENTID}}</p>
                         </div>
                         <div class="row">
                             <p class=" mb-0">{{$detail->PAT_FNAME}} {{$detail->PAT_MNAME}} {{$detail->PAT_LNAME}}</p>
@@ -223,20 +237,50 @@
                 <div class="card-body">
                 <h5 class="mb-2">Summary</h5>
                     <ul class="list-group list-group-flush">
+                    @foreach($orderDetail as $detail)
+                        @if($detail->APPOINTMENT_STATUS=='FINISH')
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Status
+                            <span>Medicine Ready</span>
+                        </li>
+                        @elseif($detail->APPOINTMENT_STATUS=='FINISH')
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Status
+                            <span class="text-success">Medicine Released</span>
+                        </li>
+                        @else
+                        <li
+                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                            Status
+                            <span>Medicine Not Ready</span>
+                        </li>
+                        @endif
+                    @endforeach
+
                     <li
                         class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                         Medicine
                         <span>@money($price->TOTAL_PRICE)</span>
                     </li>
                     <li class="list-group-item d-flex justify-content-between align-items-center px-0">
-                        Payment Status
-                        <span>Unpaid</span>
+                        @foreach($orderDetail as $detail)
+                            @if($detail->is_invoice==1)
+                            Payment Status
+                            <span class="text-success">{{$paymentStatus->INVOICE_STATUS}}</span>
+                            @endif
+                        @endforeach
                     </li>
                     </ul>
                     <hr>
                     @foreach($orderDetail as $detail)
-                    <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/preparing') }}" class="btn btn-warning" role="button" aria-pressed="true">Preparing</a>
-                    <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/release') }}" class="btn btn-success" role="button" aria-pressed="true">Release</a>
+                            <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/preparing') }}" class="btn btn-warning" role="button" aria-pressed="true">Preparing</a>
+                            @if($detail->is_invoice==1)
+                                @if($paymentStatus->INVOICE_STATUS=='PAID')
+                                <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/release') }}" class="btn btn-success" role="button" aria-pressed="true">Release</a>
+                                @endif
+                            @endif
                     @endforeach
                 </div>
                 </div>

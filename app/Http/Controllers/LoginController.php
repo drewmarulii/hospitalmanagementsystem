@@ -9,14 +9,8 @@ class LoginController extends Controller
 {
     public function index() {
         if(Auth::user()) {
-            // if($user->level == "R001") {
-            //     return redirect()->intended('adm-dash');
-            // } elseif($user->level == "R002") {
-            //     return redirect()->intended('rcp-dash');
-            // }
             return redirect()->intended('home');
         }
-
         return view('login.view_login');
     }
 

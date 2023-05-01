@@ -6,6 +6,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Models\Patient;
 use App\Models\Appointment;
+use App\Models\Invoice;
 use Illuminate\Support\Facades\DB;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 use Carbon\Carbon;
@@ -47,7 +48,11 @@ class PatientController extends Controller
         $patient->PAT_COUNTRY = $request->PAT_COUNTRY;
         $patient->save();
 
-        return redirect('/patient')->with('status', 'Patient Has Been Added');
+        $citizenID = $request->PAT_CITIZEN_ID;
+        $getPatient = Patient::where('PAT_CITIZEN_ID', $citizenID)->first();
+        $patientID = $getPatient->PATIENT_ID;
+
+        return redirect('/patient/'.$patientID)->with('status', 'Patient Has Been Added');
     }
 
     public function isOnline($site = "https://sarra.apiu.edu/")
@@ -83,9 +88,20 @@ class PatientController extends Controller
         ->join('patient','appointments.PATIENTID','=','patient.PATIENT_ID')
         ->where('PATIENTID','=',$id)
         ->get();
-            
+
+        $finish = Appointment::all()->where('APPOINTMENT_STATUS', 'FINISH')->where('PATIENTID', $id);
+        $new = Appointment::all()->where('APPOINTMENT_STATUS', 'NEW')->where('PATIENTID', $id);
+        $inProgress = Appointment::all()->where('APPOINTMENT_STATUS', 'PROGRESS');
+
+        $invoice = Invoice::all()->where('PATIENTID', $id);
+        $unpaid = Invoice::all()->where('PATIENTID', $id)->where('INVOICE_STATUS', 'WAITING-PAYMENT');
+        
         return view('breceptionist.showpatient')->with('patient', $patient)->with('years',$years)
-            ->with('user', $user)->with('medRECORD', $medRECORD)->with('appointment', $appointment);
+            ->with('user', $user)->with('medRECORD', $medRECORD)->with('appointment', $appointment)->with('invoice', $invoice)
+            ->with('finish', $finish)
+            ->with('inProgress', $inProgress)
+            ->with('new', $new)
+            ->with('unpaid', $unpaid);
     }
 
     public function showMedrec($patient, $medrec)
@@ -148,7 +164,7 @@ class PatientController extends Controller
             \Mail::send('email.email-newuser',$mail_data, function($message) use($mail_data){
                 $message->to($mail_data['recipient'])
                         ->from($mail_data['fromEmail'],$mail_data['fromName'])
-                        ->subject($mail_data['subject']) ;
+                        ->subject($mail_data['subject']);
             });
         } else {
             return "No Connection!";

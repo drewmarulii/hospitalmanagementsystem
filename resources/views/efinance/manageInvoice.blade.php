@@ -21,9 +21,6 @@
             @endif
 
             <div class="card">
-            <div class="card-header">
-                Invoice Table
-            </div>
             <div class="card-body">
 
             <table id="invoiceTable" class="table table-striped" style="width:100%">
@@ -35,7 +32,7 @@
                         <th>Patient ID</th>
                         <th>Name</th>
                         <th>Status</th>
-                        <th style="width: 120px;">Action</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,10 +45,8 @@
                         <td>{{$detail->PATIENTID}}</td>
                         <td>{{$detail->PAT_FNAME}} {{$detail->PAT_MNAME}} {{$detail->PAT_LNAME}}</td>
                         <td>{{$detail->INVOICE_STATUS}}</td>
-                        <td>
-                            <a href="{{url('/showInvoice/'.$detail->PATIENTID.'/'.$detail->INVOICE_ID.'/show')}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true"><i class="fas fa-eye"></i></a>
-                            <a href="" class="btn btn-warning btn-sm" role="button" aria-pressed="true"><i class="fas fa-pen"></i></a>
-                            <a href="" class="btn btn-danger btn-sm" role="button" aria-pressed="true"><i class="fas fa-trash"></i></a>
+                        <td class>
+                            <a href="{{url('/showInvoice/'.$detail->PATIENTID.'/'.$detail->INVOICE_ID.'/show')}}" class="btn btn-primary btn-sm" role="button" aria-pressed="true">View</a>
                         </td>
                     </tr>
                     <?php $i++ ?>

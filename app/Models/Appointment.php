@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class Appointment extends Model
 {
-    // use HasFactory;
+    use Notifiable;
     public $table = 'appointments';
     protected $primaryKey = 'APPOINTMENT_ID';
     protected $keyType = 'string';

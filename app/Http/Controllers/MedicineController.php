@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Auth;
 use DB;
 use App\Models\OrderMedicine;
+use App\Models\MedicalRecord;
 use App\Models\Medicine;
+use App\Models\Appointment;
 use Illuminate\Http\Request;
 
 class MedicineController extends Controller
@@ -14,6 +16,7 @@ class MedicineController extends Controller
     {        
         $user = Auth::user();
         
+        $today = now()->format('Y-m-d');
         $orderMed = DB::table('medicalrecord')
         ->select('RECORD_ID', 'medicalrecord.APPOINTMENT_ID', 'user_fname', 'user_mname', 'user_lname', 'PATIENTID', 'PAT_FNAME', 'PAT_MNAME', 'PAT_LNAME', 'APP_DATE', 'APPOINTMENT_STATUS')
         ->join('appointments','medicalrecord.APPOINTMENT_ID','=','appointments.APPOINTMENT_ID')
@@ -22,14 +25,18 @@ class MedicineController extends Controller
         ->orderBy('APP_DATE', 'DESC')
         ->get();
 
-        return view('dpharmacy.medrequest')->with('user', $user)->with('orderMed', $orderMed);
+        $newOrder = Appointment::all()->where('APPOINTMENT_STATUS', 'WAIT-MEDICINE');
+        $readyOrder = Appointment::all()->where('APPOINTMENT_STATUS', 'FINISH');
+        $finishOrder = Appointment::all()->where('APPOINTMENT_STATUS', 'COMPLETED');
+
+        return view('dpharmacy.medrequest')->with('user', $user)->with('orderMed', $orderMed)->with('readyOrder', $readyOrder)->with('newOrder', $newOrder)->with('finishOrder', $finishOrder);
     }
 
     public function showOrder($recID)
     {        
         $user = Auth::user();
         $orderDetail = DB::table('appointments')
-        ->select('appointments.APPOINTMENT_ID', 'APP_DATE', 'APPOINTMENT_STATUS', 'RECORD_ID', 'PATIENTID', 'PAT_FNAME', 'PAT_MNAME', 'PAT_LNAME', 'PAT_PHONENUMBER', 'PAT_ADDRESS', 'PAT_CITY', 'PAT_COUNTRY', 'user_fname', 'user_mname', 'user_lname')
+        ->select('appointments.APPOINTMENT_ID', 'APP_DATE', 'APPOINTMENT_STATUS', 'RECORD_ID', 'PATIENTID', 'PAT_FNAME', 'PAT_MNAME', 'PAT_LNAME', 'PAT_PHONENUMBER', 'PAT_ADDRESS', 'PAT_CITY', 'PAT_COUNTRY', 'user_fname', 'user_mname', 'user_lname', 'is_invoice')
         ->join('users','appointments.DOCTOR_ID','=','users.userid')
         ->join('patient','appointments.PATIENTID','=','patient.PATIENT_ID')
         ->join('medicalrecord','appointments.APPOINTMENT_ID','=','medicalrecord.APPOINTMENT_ID')
@@ -49,8 +56,14 @@ class MedicineController extends Controller
         ->groupBy('MEDRECID')
         ->get();
 
+        $paymentStatus = DB::table('invoices')
+        ->select('INVOICE_ID', 'INVOICE_STATUS', 'PATIENT_ID', 'APPOINTMENT_ID')
+        ->join('patient','invoices.PATIENTID','=','patient.PATIENT_ID')
+        ->join('appointments','patient.PATIENT_ID','=','appointments.PATIENTID')
+        ->first();
+
         return view('dpharmacy.showmedrequest')->with('user', $user)->with('orderMed', $orderMed)->with('orderDetail',$orderDetail)
-            ->with('orderPrice', $orderPrice);
+            ->with('orderPrice', $orderPrice)->with('paymentStatus', $paymentStatus)->with('recID', $recID);
     }
 
     public function preparingOrder($recID)
@@ -99,19 +112,14 @@ class MedicineController extends Controller
     {        
         $user = Auth::user();
 
-        $orderMed = DB::table('ordermedicine')
-        ->select('*')
-        ->where('MEDRECID','=','MR-2023-00001')
-        ->get();
+        $orderMed = OrderMedicine::all()->where('MEDRECID','=',$recID);
+        $orderMed->count();
 
         if($orderMed->ORD_STATUS = 'BOOKED') {
-            $orderMed->ORD_STATUS = 'RELEASE';
-            $orderMed->update();
-
-        } else if($orderMed->ORD_STATUS = 'NOT AVAILABLE') {
-
-        } else {
-
+            foreach($orderMed as $row) {
+                $row->ORD_STATUS = 'COMPLETED';
+                $row->update();
+            }
         };
 
         return redirect('/medOrderID/'.$recID)->with('status', 'Medicine Released!');
@@ -122,8 +130,16 @@ class MedicineController extends Controller
         $user = Auth::user();
         $medicine = Medicine::all();
 
+        $safeMedicine = Medicine::all()->where('MED_INSTOCK','>',100);
+        $warnMedicine = DB::table('medicine')
+        ->select('*')
+        ->where('MED_INSTOCK','<',100)
+        ->where('MED_INSTOCK','>=',1)
+        ->get();
+        $finishMedicine = Medicine::all()->where('MED_INSTOCK','<','1');
 
-        return view('dpharmacy.medicine')->with('user', $user)->with('medicine', $medicine);
+        return view('dpharmacy.medicine')->with('user', $user)->with('medicine', $medicine)->with('safeMedicine', $safeMedicine)
+        ->with('warnMedicine', $warnMedicine)->with('finishMedicine', $finishMedicine);
     }
 
     public function storeMedicine(Request $request)
@@ -142,9 +158,20 @@ class MedicineController extends Controller
 
     public function deleteMedicine($medID) {
         $medicine = Medicine::findOrFail($medID);
-        $medicine->delete();
+        
+        $medicine->is_active = 0;
+        $medicine->update();
 
-        return redirect('/medInstock')->with('status', 'Medicine: '. $medicine->MEDICINE_NAME .'  Successfully deleted!');
+        return redirect('/medInstock')->with('status', 'Medicine: '. $medicine->MEDICINE_NAME .'  Successfully Inactive!');
+    }
+
+    public function setActive($medID) {
+        $medicine = Medicine::findOrFail($medID);
+        
+        $medicine->is_active = 1;
+        $medicine->update();
+
+        return redirect('/medInstock')->with('status', 'Medicine: '. $medicine->MEDICINE_NAME .'  Successfully Active!');
     }
 
     public function updateMedicine(Request $request, $medID)
@@ -161,5 +188,17 @@ class MedicineController extends Controller
         $medicine->update();
 
         return redirect('/medInstock')->with('status', 'Medicine: '. $medicine->MEDICINE_NAME .' Successfully Updated!');
+    }
+
+    public function medicineReady($recID) {
+        $medRec = MedicalRecord::findOrFail($recID);
+        $appID = $medRec->APPOINTMENT_ID;
+
+        $appointment = Appointment::find($appID);
+        
+        $appointment->APPOINTMENT_STATUS = "FINISH";
+        $appointment->update();
+
+        return redirect('/medOrderID/'.$recID)->with('status', 'Medicine Order Ready');
     }
 }

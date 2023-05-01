@@ -28,7 +28,7 @@
     <div class="col-sm">
         <div class="small-box bg-dark">
         <div class="inner">
-        <h4>50 <span class="h6">Items</span></h4>
+        <h4>{{$medicine->count()}} <span class="h6">Items</span></h4>
             <p>Medicine</p>
         </div>
         <div class="icon">
@@ -40,7 +40,7 @@
     <div class="col-sm">
     <div class="small-box bg-success">
         <div class="inner">
-        <h4>50 <span class="h6">Items</span></h4>
+        <h4>{{$safeMedicine->count()}}  <span class="h6">Items</span></h4>
         <p>Safe Stock</p>
         </div>
         <div class="icon">
@@ -52,7 +52,7 @@
     <div class="col-sm">
     <div class="small-box bg-warning">
         <div class="inner">
-        <h4>50 <span class="h6">Items</span></h4>
+        <h4>{{$warnMedicine->count()}}  <span class="h6">Items</span></h4>
         <p>Warning Stock</p>
         </div>
         <div class="icon">
@@ -64,7 +64,7 @@
     <div class="col-sm">
     <div class="small-box bg-danger">
         <div class="inner">
-        <h4>50 <span class="h6">Items</span></h4>
+        <h4>{{$finishMedicine->count()}}  <span class="h6">Items</span></h4>
         <p>Finish Stock</p>
         </div>
         <div class="icon">
@@ -88,7 +88,7 @@
                     <th>Pack</th>
                     <th class="text-right">Price</th>
                     <th class="text-center">Instock</th>
-                    <th style="width: 120px;">Action</th>
+                    <th class="text-right" style="width: 110px;">Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,8 +101,15 @@
                     <td class="text-right">{{$item->QTY_PERPACK}} {{$item->QTY_UNIT}}</td>
                     <td>{{$item->MED_PACKTYPE}}</td>
                     <td class="text-right">@money($item->MED_PRICE)</td>
-                    <td class="text-center">{{$item->MED_INSTOCK}}</td>
-                    <td>
+                    @if($item->MED_INSTOCK>100)
+                    <td class="text-center bg-success">{{$item->MED_INSTOCK}}</td>
+                    @elseif($item->MED_INSTOCK<=100&&$item->MED_INSTOCK>=10)
+                    <td class="text-center bg-warning">{{$item->MED_INSTOCK}}</td>
+                    @else
+                    <td class="text-center bg-danger">{{$item->MED_INSTOCK}}</td>
+                    @endif
+                    <td class="text-right"> 
+                        @if($item->is_active==1)
                         <a type="button" class="btn btn-primary btn-sm text-light" data-toggle="modal" data-target="#modal-{{$item->MEDICINE_ID}}">
                             <i class="fas fa-eye"></i>
                         </a>
@@ -111,6 +118,12 @@
                         </a>
                         <!-- <a href="{{url('/medInstock/'.$item->MEDICINE_ID.'/update')}}" class="btn btn-warning btn-sm" role="button" aria-pressed="true"><i class="fas fa-pen"></i></a> -->
                         <a href="{{url('/medInstock/'.$item->MEDICINE_ID.'/delete')}}" class="btn btn-danger btn-sm" role="button" aria-pressed="true"><i class="fas fa-trash"></i></a>
+                        @else
+                        <a type="button" class="btn btn-primary btn-sm text-light mr-0" data-toggle="modal" data-target="#modal-{{$item->MEDICINE_ID}}">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{url('/medInstock/'.$item->MEDICINE_ID.'/setActive')}}" class="btn btn-success btn-sm" role="button" aria-pressed="true">Activate</a>
+                        @endif
                     </td>
                 </tr>
                 @include('layout.modal-pharmacy.modal-medicine')

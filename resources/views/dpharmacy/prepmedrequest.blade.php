@@ -69,7 +69,6 @@
                                     <a type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modal-{{$medicine->MEDICINE_ID }}">
                                         <i class="fas fa-pen"></i>
                                     </a>
-                                    <a href="" class="btn btn-danger btn-sm" role="button" aria-pressed="true"><i class="fas fa-trash"></i></a>
                                 </td>
                             </tr>
                             <!-- Modal -->
@@ -133,21 +132,22 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                            <button type="submit" class="btn btn-success    ">Save</button>
+                                            <button type="submit" class="btn btn-success">Save</button>
                                         </form>
                                         </div>
                                     </div>
                                     </div>
                                 </div>
                                 <!-- End Modal -->
-                            @endforeach
+                                                           
+                                @endforeach
                         </table>
-            
-
+       
                         </div>
                     </div>
                     <!-- End Medicine Item -->
-
+       
+                   
                 </div>
 
             </div>
@@ -155,7 +155,7 @@
                 </div>
             </div>
 
-
+            <a href="{{ url('/medOrderID/'.$medicine->MEDRECID.'/ready') }}" class="btn btn-success float-right mb-3" role="button" aria-pressed="true">Medicine Ready</a>
             </div>
         </div>
     </div>

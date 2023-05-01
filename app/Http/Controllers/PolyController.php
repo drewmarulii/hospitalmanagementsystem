@@ -29,4 +29,13 @@ class PolyController extends Controller
         $polyclinic->save();
         return redirect('/polyclinic')->with('status', 'New Role Has Been Added');
     }
+
+    public function edit(Request $request, $polyID) 
+    {
+        $polyclinic = Poly::find($polyID);
+        $polyclinic->poly_name = $request->poly_name;
+        $polyclinic->update();
+
+        return redirect('/polyclinic')->with('status', 'Clinic Name Updated');
+    }
 }

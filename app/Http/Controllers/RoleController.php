@@ -24,11 +24,19 @@ class RoleController extends Controller
     public function store(Request $request) 
     {
         $roles = new Roles;
-        $roles->role_id = $request->role_id;
         $roles->role_name = $request->role_name;
         $roles->save();
 
         return redirect('/role')->with('status', 'New Role Has Been Added');
+    }
+
+    public function edit(Request $request, $roleID) 
+    {
+        $roles = Roles::find($roleID);
+        $roles->role_name = $request->role_name;
+        $roles->update();
+
+        return redirect('/role')->with('status', 'Role Updated');
     }
 
 }

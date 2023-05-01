@@ -5,7 +5,11 @@
 @endsection
 
 @section('breadcrumb')
-
+<div class="card bg-dark mb-0" style="width: 300px;">
+  <div class="card-body">
+    <p class="mb-0">Medical Record: <span class="float-right h1 mr-2">{{$medRECORD->count()}}</span></p>
+  </div>
+</div>
 @endsection
 
 @section('content')
@@ -14,61 +18,7 @@
         <div class="row">
           <div class="col">
 
-          <!-- Summary Card -->
-             <div class="row">
-
-              <div class="col-sm">
-                <div class="small-box bg-primary">
-                  <div class="inner">
-                  <h4>50</h4>
-                    <p>New Appointment</p>
-                  </div>
-                  <div class="icon">
-                  <i class="ion ion-android-people"></i>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-sm">
-              <div class="small-box bg-info">
-                <div class="inner">
-                <h4>50</h4>
-                  <p>On-Treatment</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-android-people"></i>
-                </div>
-              </div>
-              </div>
-
-              <div class="col-sm">
-              <div class="small-box bg-warning">
-                <div class="inner">
-                <h4>50</h4>
-                  <p>Cancelled</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-android-people"></i>
-                </div>
-              </div>
-              </div>
-
-              <div class="col-sm">
-              <div class="small-box bg-success">
-                <div class="inner">
-                <h4>50</h4>
-                  <p>Finished</p>
-                </div>
-                <div class="icon">
-                  <i class="ion ion-android-people"></i>
-                </div>
-              </div>
-              </div>
-              
-              </div>
-              <!-- End Summary Card -->
-
-            <div class="card">
+                <div class="card">
               <div class="card-header border-0">
 
               <table id="appointmentTable" class="table table-striped" style="width:100%">
@@ -96,7 +46,7 @@
                           <a type="button" class="btn btn-success btn-sm text-light" data-toggle="modal" data-target="#modal-{{$record->APPOINTMENT_ID }}">
                               {{$record->APPOINTMENT_ID}}
                           </a>
-                          @elseif($record->APPOINTMENT_STATUS =='FIN-UNPAID')         
+                          @elseif($record->APPOINTMENT_STATUS =='WAIT-MEDICINE')         
                           <a type="button" class="btn btn-info btn-sm text-light" data-toggle="modal" data-target="#modal-{{$record->APPOINTMENT_ID }}">
                               {{$record->APPOINTMENT_ID}}
                           </a> 

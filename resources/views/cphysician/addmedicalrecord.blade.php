@@ -140,15 +140,17 @@
             <div class="col">
             <div class="form-group">
                   <label for="field1">Complaints<span class="text-danger"> *</span></label>
-                  <textarea name="MEDREC_COMPLAINTS" id="editor" cols="30" rows="5"  required>
-                  </textarea>
+                  <!-- <textarea name="MEDREC_COMPLAINTS"  cols="30" rows="5"  required>
+                  </textarea> -->
+                  <textarea class="form-control" name="MEDREC_COMPLAINTS" cols="30" rows="5"></textarea>
               </div>
             </div>
             <div class="col">
             <div class="form-group">
                   <label for="field1">Diagnosis<span class="text-danger"> *</span></label>
-                  <textarea name="MEDREC_DIAGNOSIS" id="editor1" cols="30" rows="5" required>
-                  </textarea>
+                  <!-- <textarea name="MEDREC_DIAGNOSIS" cols="30" rows="5" required>
+                  </textarea> -->
+                  <textarea class="form-control" name="MEDREC_DIAGNOSIS" cols="30" rows="5"></textarea>
               </div>
             </div>
           </div>
@@ -217,17 +219,17 @@
                     <th style="width:35%;">Medicine Item<span class="text-danger"> *</span></th>
                     <th style="width:7%;">QTY<span class="text-danger"> *</span></th>
                     <th>Instruction<span class="text-danger"> *</span></th>
-                    <th>Instock<span class="text-danger"> *</span></th>
+                    <th style="width:10%;">Instock<span class="text-danger"> *</span></th>
                 </tr>
                 <tr>
                     <td></td>
                     <td>
-                      <select class="form-select" name="MEDICINE_ID[0]" id="addMoreInputFields[0][medicine]" aria-label="Default select example" required>
-                        <option selected disabled>Medicine Item</option>
-                        @foreach($mdclist as $medicine)
-                        <option value="{{$medicine->MEDICINE_ID}}">{{$medicine->MEDICINE_NAME}}</option>
+                    <select class="form-select" name="MEDICINE_ID[0]" id="category">
+                        <option hidden>Choose Medicine</option>
+                        @foreach ($mdclist as $item)
+                        <option value="{{ $item->MEDICINE_ID }}">{{ $item->MEDICINE_NAME }}</option>
                         @endforeach
-                      </select>
+                    </select>     
                     </td>
                     <td>
                       <div class="input-group">
@@ -240,11 +242,13 @@
                       </div>
                     </td>
                     <td>
-                      <p>500</p>
+                      <div id="app">
+                      </div>
                     </td>
                 </tr>
               </table>
-            
+
+                          
             </div>
             <div class="card-footer">
               <!-- Temporary -->
@@ -302,32 +306,7 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/jquery.validate.min.js"></script>
   <!-- Our script! :) -->
   <script src="../dist/enchanter.js"></script>  
-  <script src="https://cdn.ckeditor.com/4.8.0/full-all/ckeditor.js"></script>
-  <script>
-  CKEDITOR.replace('editor', {
-    skin: 'moono',
-    enterMode: CKEDITOR.ENTER_BR,
-    shiftEnterMode:CKEDITOR.ENTER_P,
-    toolbar: [{ name: 'basicstyles', groups: [ 'basicstyles' ], items: [ 'Bold', 'Italic', 'Underline', "-", 'TextColor', 'BGColor' ] },
-              { name: 'styles', items: [ 'Format', 'FontSize' ] },
-              { name: 'paragraph', groups: [ 'list', 'indent' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
-              { name: 'links', items: [ 'Link', 'Unlink' ] },
-              { name: 'spell', items: [ 'jQuerySpellChecker' ] },
-              ],
-  });
 
-  CKEDITOR.replace('editor1', {
-    skin: 'moono',
-    enterMode: CKEDITOR.ENTER_BR,
-    shiftEnterMode:CKEDITOR.ENTER_P,
-    toolbar: [{ name: 'basicstyles', groups: [ 'basicstyles' ], items: [ 'Bold', 'Italic', 'Underline', "-", 'TextColor', 'BGColor' ] },
-              { name: 'styles', items: [ 'Format', 'FontSize' ] },
-              { name: 'paragraph', groups: [ 'list', 'indent' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'] },
-              { name: 'links', items: [ 'Link', 'Unlink' ] },
-              { name: 'spell', items: [ 'jQuerySpellChecker' ] },
-              ],
-  });
-  </script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
@@ -343,7 +322,7 @@
               '<select class="form-select" name="TREATMENT_ID['+ i +']" id="addMoreInputFields['+ i +'][treatment]" aria-label="Default select example">'+
                 '<option selected disabled>Treatment Item</option>'+
                 '@foreach($tlist as $treatmentlist)'+
-                '<option value="{{$treatmentlist->TREATMENT_ID}}">{{$treatmentlist->TREATMENT_NAME}} [IDR{{$treatmentlist->TREATMENT_PRICE}}]</option>'+
+                '<option value="{{$treatmentlist->TREATMENT_ID}}">{{$treatmentlist->TREATMENT_NAME}}</option>'+
                 '@endforeach'+
               '</select>'+
             '</td>'+
@@ -363,38 +342,97 @@
 <script type="text/javascript">
     var j = 0;
     $("#dynamic-ar1").click(function () {
-        ++j;
-        
+        ++j; 
         $("#dynamicAddRemove1").append(
-          '<tr>'+
-          '<td><button type="button" class="btn btn-danger btn-sm remove-input-field"><i class="fa fa-trash"></button></td>'+
-                  '<td>'+
-                    '<select class="form-select" name="MEDICINE_ID['+ j +']" id="addMoreInputFields['+ j +'][medicine]" aria-label="Default select example" required>'+
-                      '<option selected disabled>Medicine Item</option>'+
-                      '@foreach($mdclist as $medicine)'+
-                      '<option value="{{$medicine->MEDICINE_ID}}">{{$medicine->MEDICINE_NAME}}</option>'+
-                      '@endforeach'+
-                    '</select>'+
-                  '</td>'+
-                  '<td>'+
-                    '<div class="input-group">'+
-                      '<input type="text" name="QUANTITY['+ j +']" id="addMoreInputFields['+ j +'][quantity]" class="form-control" aria-describedby="basic-addon1" required>'+
-                    '</div>'+
-                  '</td>'+
-                  '<td>'+
-                    '<div class="input-group">'+
-                      '<textarea name="INSTRUCTION['+ j +']" id="addMoreInputFields['+ j +'][instruction]" class="form-control" aria-describedby="basic-addon1" rows="1" required></textarea>'+
-                    '</div>'+
-                  '</td>'+
-              '</tr>'
-        
-            );
-    });
+            '<tr>'+
+            '<td><button type="button" class="btn btn-danger btn-sm remove-input-field"><i class="fa fa-trash"></button></td>'+
+              '<td>'+
+              '<select class="form-select" name="MEDICINE_ID['+ j +']" id="category['+ j +']">'+
+                  '<option hidden>Choose Medicine</option>'+
+                  '@foreach ($mdclist as $item)'+
+                  '<option value="{{ $item->MEDICINE_ID }}">{{ $item->MEDICINE_NAME }}</option>'+
+                  '@endforeach'+
+              '</select>' +    
+              '</td>'+
+              '<td>'+
+                '<div class="input-group">'+
+                  '<input type="text" name="QUANTITY['+ j +']" id="addMoreInputFields['+ j +'][quantity]" class="form-control" aria-describedby="basic-addon1" required>'+
+                '</div>'+
+              '</td>'+
+              '<td>'+
+                '<div class="input-group">'+
+                  '<textarea name="INSTRUCTION['+ j +']" id="addMoreInputFields['+ j +'][instruction]" class="form-control" aria-describedby="basic-addon1" rows="1" required></textarea>'+
+                '</div>'+
+              '</td>'+
+              '<td>'+
+                '<div id="app['+ j +']">'+
+                '</div>'+
+              '</td>'+
+          '</tr>'
+        );  
+    
+      });
     $(document).on('click', '.remove-input-field', function () {
         $(this).parents('tr').remove();
     });
 </script>
 
+<script>
+var k = 0;
+$(document).ready(function() {
+$('#category['+ k +']').on('change', function() {
+  $('#app['+ k +']').empty();
+    var categoryID = $(this).val();
+    if(categoryID) {
+        $.ajax({
+            url: '/getInstock/'+categoryID,
+            type: "GET",
+            data : {"_token":"{{ csrf_token() }}"},
+            dataType: "json",
+            success:function(data)
+            {
+              if(data){
+                $('#app['+ k +']').append('<p>'+ data.MED_INSTOCK + " " + data.MED_PACKTYPE+ '</p>'); 
+            }else{
+                $('#app['+ k +']').empty();
+            }
+          }
+        });
+    }else{
+      $('#app['+ k +']').empty();
+    }
+    k++;
+  });
+});
+</script>
+
+<script>
+$(document).ready(function() {
+$('#category').on('change', function() {
+  $('#app').empty();
+    var categoryID = $(this).val();
+    if(categoryID) {
+        $.ajax({
+            url: '/getInstock/'+categoryID,
+            type: "GET",
+            data : {"_token":"{{ csrf_token() }}"},
+            dataType: "json",
+            success:function(data)
+            {
+              if(data){
+                $('#app').append('<p>'+ data.MED_INSTOCK + " " + data.MED_PACKTYPE+ '</p>'); 
+            }else{
+                $('#app').empty();
+            }
+          }
+        });
+    }else{
+      $('#app').empty();
+    }
+    i++;
+  });
+});
+</script>
         </div>
       </div>
     </div>

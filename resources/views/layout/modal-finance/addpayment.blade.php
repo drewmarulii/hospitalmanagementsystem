@@ -26,7 +26,7 @@
         </div>
     </div>
 
-<form name="addPayment" id="addPayment" method="POST" action="{{url('showInvoice/'.$invoice->PATIENTID.'/'.$invoice->INVOICE_ID.'/store')}}">
+<form name="addPayment" id="addPayment" method="POST" action="{{url('showInvoice/'.$invoice->PATIENTID.'/'.$invoice->INVOICE_ID.'/paid')}}" enctype="multipart/form-data">
     @csrf
   <div class="form-group">
     <div class="row">
@@ -34,7 +34,12 @@
         <p for="exampleInputEmail1">Amount Paid:</p>
     </div>
     <div class="col-6">
-        <input type="number" class="form-control text-right loan-input" id="exampleInputEmail1" aria-describedby="emailHelp">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">IDR</span>
+        </div>
+            <input type="text" class="form-control text-right" name="AMOUNT_PAID" id="money" aria-describedby="emailHelp">
+        </div>
     </div>
     </div>
 
@@ -43,7 +48,7 @@
         <p for="exampleInputEmail1">Payment Method:</p>
     </div>
     <div class="col-6">
-    <select class="form-select" aria-label="Default select example">
+    <select class="form-select" id="my-dropdown" name="PAYMENT_METHOD" aria-label="Default select example">
         <option value="CASH">Cash</option>
         <option value="BANK-TRANSFER">Bank Transfer</option>
         <option value="DIGITAL-PAYMENT">Digital Payment (QRIS)</option>
@@ -56,7 +61,14 @@
         <p for="exampleInputEmail1">Payment Proof:</p>
     </div>
     <div class="col-6">
-        <input class="form-control" type="file" id="formFile" placeholder=" ">
+        <div class="form-group">
+            <div class="input-group">
+              <div class="custom-file">
+                <input type="file" class="custom-file-input" id="my-required-field" name="PAYMENT_PROOF_FILE">
+                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+              </div>
+            </div>
+        </div>
     </div>
     </div>
    
@@ -72,3 +84,46 @@
 </div>
 </div>
 <!-- End Modal -->
+
+<script src="easy-number-separator.js"></script>
+
+<script>
+function updateTextView(_obj){
+  var num = getNumber(_obj.val());
+  if(num==0){
+    _obj.val('');
+  }else{
+    _obj.val(num.toLocaleString());
+  }
+}
+function getNumber(_str){
+  var arr = _str.split('');
+  var out = new Array();
+  for(var cnt=0;cnt<arr.length;cnt++){
+    if(isNaN(arr[cnt])==false){
+      out.push(arr[cnt]);
+    }
+  }
+  return Number(out.join(''));
+}
+$(document).ready(function(){
+  $('#money').on('keyup',function(){
+    updateTextView($(this));
+  });
+});
+</script>
+
+<script>
+    $(document).ready(function() {
+        $('#my-dropdown').change(function() {
+            if ($(this).val() == 'BANK-TRANSFER') {
+                $('#my-required-field').prop('required', true);
+            } elseif ($(this).val() == 'DIGITAL-PAYMENT') {
+                $('#my-required-field').prop('required', true);
+            } else {
+                $('#my-required-field').prop('required', false);
+            }
+        });
+    });
+</script>
+

@@ -8,9 +8,10 @@ use Haruncpi\LaravelIdGenerator\IdGenerator;
 
 class Poly extends Model
 {
-    // use HasFactory;
     public $table = 'polyclinic';
-
+    protected $primaryKey = 'poly_id';
+    protected $keyType = 'string';
+    
     public static function boot()
     {
         parent::boot();

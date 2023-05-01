@@ -9,14 +9,12 @@
 @endsection
 
 @section('content')
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
 
-    <div class="content">
-      
-      <div class="container-fluid">
-        <div class="row">
-          
           <div class="col-4">
-          @if(session('status'))
+            @if(session('status'))
             <div class="alert alert-success">
                 {{ session('status') }}
             </div>
@@ -27,47 +25,36 @@
               <div class="card-body">
 
               <form name="addappointment" id="addappointment" method="POST" action="{{url('addappointment')}}">
-            @csrf
+              @csrf
                 <div class="form-group">
                     <label for="exampleInputPassword1">Patient ID <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="PATIENTID" name="PATIENTID" value="<?php if(isset($_GET['PATIENT_ID'])){echo $_GET['PATIENT_ID'];} ?>" placeholder="Input Patient ID" required>
                 </div>
-
                 <div class="form-group">
                     <label for="exampleInputEmail1">Appointment Date <span class="text-danger">*</span></label>
                     <input type="date" class="form-control" id="APP_DATE" name="APP_DATE" placeholder="Appointment Date" required>
                 </div>
-
                 <div class="form-group">
-                  <label for="cars">Polyclinic <span class="text-danger">*</span></label>
-                  <select class="form-select" id="poly_id" name="poly_id" placeholder="Polyclinic" required>
-                    <option selected disabled>Choose Polyclinic</option>
-                    @foreach($polyclinic as $polyitem)
-                      <option value="{{$polyitem->poly_id}}">{{$polyitem->poly_name}}</option>
-                    @endforeach
-                  </select>
+                    <label for="category" class="form-label">Polyclinic <span class="text-danger">*</span></label>
+                    <select class="form-select" name="poly_id" id="category">
+                        <option hidden>Choose Polyclinic</option>
+                        @foreach ($polyclinic as $item)
+                        <option value="{{ $item->poly_id }}">{{ $item->poly_name }}</option>
+                        @endforeach
+                    </select>
                 </div>
-
                 <div class="form-group">
-                  <label for="cars">Physician <span class="text-danger">*</span></label>
-                  <select class="form-select" id="DOCTOR_ID" name="DOCTOR_ID" placeholder="Polyclinic" required>
-                    <option selected disabled>Choose Physician</option>
-                    @foreach($useraccount as $physician)
-                      <option value="{{$physician->userid}}">Dr. {{$physician->user_fname}} {{$physician->user_mname}} {{$physician->user_lname}}</option>
-                    @endforeach
-                  </select>
-                </div>
-
+                <label for="course" class="form-label">Physician</label>
+                    <select class="form-select" name="DOCTOR_ID" id="course">
+                    </select>
+                </div> 
                 <button type="submit" id="btnSubmit2" name="addappointment" class="btn btn-primary">Submit</button>
-                </form>
-
+              </form>
               </div>
             </div>
-            
           </div>
 
           <div class="col-8">
-
             <div class="card">
               <h5 class="card-header bg-info">Patient Information</h5>
               <div class="card-body">
@@ -87,11 +74,10 @@
               </form>
                 @include('layout.check-patient')
               </div>
-            </div>
+          </div>
 
         </div>
       </div>
     </div>
-
 @endsection
 

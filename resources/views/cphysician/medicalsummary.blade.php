@@ -1,7 +1,11 @@
 @extends('layout')
 
 @section('title')
-<h1 class="m-0">Medical Summary <span class="text-success h4">#{{ $newMedical -> RECORD_ID }}</span></h1>
+<a href="{{ url('/myQueue') }}" type="button" class="btn btn-primary">Go Back</a>
+@endsection
+
+@section('breadcrumb')
+  <h1><span class="h5 text-success">{{$newMedical->RECORD_ID}} /</span> Medical Summary</h1>
 @endsection
 
 @section('content')
@@ -17,12 +21,12 @@
       </div>
       @endif
 
-      <div class="jumbotron text-center bg-success p-2 bg-opacity-10">
-        <h1 class="display-3">Success!</h1>
+      <div class="card text-center p-2">
+        <h1 class="display-3">Medical Treatment Done!</h1>
         <p class="lead"><strong>Medical Record with ID [{{ $newMedical -> RECORD_ID }}] has been added!</p>
         <hr>
         <p class="lead">
-          <a class="btn btn-primary btn-sm" href="{{url('/myQueue')}}" role="button">Appointment List</a>
+          <a class="btn btn-primary" href="{{url('/myMedicalRecord/'.$getPatient->PATIENT_ID.'/'.$newMedical->RECORD_ID)}}" role="button">View Detail</a>
         </p>
       </div>
 
