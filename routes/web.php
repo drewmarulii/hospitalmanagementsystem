@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth']], function() {
         //Payment Record
         Route::get('/showInvoice/{patient}/{invID}/addPayment', [InvoiceController::class, 'addPayment']);
         Route::post('/showInvoice/{patient}/{invID}/paid', [InvoiceController::class, 'storePayment']);
+        Route::post('/payment/{paymentID}/update', [InvoiceController::class, 'updatePayment']);
         //Treatment Item
         Route::get('/treatmentitem', [TreatmentItemController::class, 'index']);
         Route::post('/treatmentitem', [TreatmentItemController::class, 'store']);

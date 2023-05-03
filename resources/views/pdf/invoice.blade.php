@@ -261,7 +261,7 @@
       <table>
           <tr>
             <th class="right">Total</th>
-            <td class="right" style="width: 40%;">@money($totalprice)</td>
+            <td class="right" style="width: 40%;">@money($invoice->INVOICE_AMOUNT)</td>
           </tr>
         </table>
       </div>

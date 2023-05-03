@@ -265,7 +265,9 @@
                     <div class="card">
                     <div class="card-body">
                         @if($payment->PAYMENT_PROOF_FILE)
+                        <a type="button" class="btn btn-warning float-right mb-2" data-toggle="modal" data-target="#updatePayment-{{$payment->PAYMENT_ID}}">Update Payment</a>
                         <p>Proof of Payment:</p>
+                        @include('layout.modal-finance.updatepayment')
                         <img class="clickable-image img-thumbnail" src="{{ asset('uploads/payment/'.$payment->PAYMENT_PROOF_FILE) }}" alt="Thumbnail Image" data-src="{{ asset('uploads/payment/'.$payment->PAYMENT_PROOF_FILE) }}">
                         @endif
                     </div>

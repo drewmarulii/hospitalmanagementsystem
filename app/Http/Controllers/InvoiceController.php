@@ -272,5 +272,46 @@ class InvoiceController extends Controller
         return redirect('/showInvoice/'.$patient.'/'.$invID.'/show')->with('user', $user)->with('status', 'Payment has been Made');
     }
 
+    public function updatePayment(Request $request, $paymentID)
+    {
+        $payment = Payment::find($paymentID);
+        $invoice = Invoice::find($payment->INVOICEID);
+        $invoiceID = $invoice->INVOICE_ID;
+        
+        $amountPaid =  $request->AMOUNT_PAID;
+        $key = (float) str_replace(',', '', $amountPaid);
+        $exchange = $key - ($invoice->INVOICE_AMOUNT);
+
+        $payment->AMOUNT_PAID = $key;
+        $payment->PAYMENT_METHOD = $request->PAYMENT_METHOD;
+        $payment->EXCHANGE = $exchange;
+        $image_path = public_path().'/uploads/payment/'.$payment->PAYMENT_PROOF_FILE;
+            if($payment->PAYMENT_PROOF_FILE) {
+                if($request->hasfile('PAYMENT_PROOF_FILE'))
+                {
+                    unlink($image_path);
+                    $file = $request->file('PAYMENT_PROOF_FILE');
+                    $extention = $file->getClientOriginalExtension();
+                    $filename = $invoiceID.".".$extention;
+                    $file->move('uploads/payment/',$filename);
+                    $payment->PAYMENT_PROOF_FILE=$filename;
+                }
+            } else {
+                if($request->hasfile('PAYMENT_PROOF_FILE'))
+                {
+                    $file = $request->file('PAYMENT_PROOF_FILE');
+                    $extention = $file->getClientOriginalExtension();
+                    $filename = $invoiceID.".".$extention;
+                    $file->move('uploads/payment/',$filename);
+                    $payment->PAYMENT_PROOF_FILE=$filename;
+                }
+            }
+        $payment->update();
+
+        return redirect('/showInvoice/'.$invoice->PATIENTID.'/'.$payment->INVOICEID.'/show')->with('status', 'Payment has been Updated');
+    }
+
+    
+
     
 }

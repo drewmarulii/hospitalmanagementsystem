@@ -378,35 +378,6 @@
 </script>
 
 <script>
-var k = 0;
-$(document).ready(function() {
-$('#category['+ k +']').on('change', function() {
-  $('#app['+ k +']').empty();
-    var categoryID = $(this).val();
-    if(categoryID) {
-        $.ajax({
-            url: '/getInstock/'+categoryID,
-            type: "GET",
-            data : {"_token":"{{ csrf_token() }}"},
-            dataType: "json",
-            success:function(data)
-            {
-              if(data){
-                $('#app['+ k +']').append('<p>'+ data.MED_INSTOCK + " " + data.MED_PACKTYPE+ '</p>'); 
-            }else{
-                $('#app['+ k +']').empty();
-            }
-          }
-        });
-    }else{
-      $('#app['+ k +']').empty();
-    }
-    k++;
-  });
-});
-</script>
-
-<script>
 $(document).ready(function() {
 $('#category').on('change', function() {
   $('#app').empty();

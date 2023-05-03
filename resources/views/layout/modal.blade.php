@@ -15,8 +15,7 @@
             <div>
                 <img src="{{ asset('dist/img/logo.png') }} " class="brand-image">
                 <span class="brand-text font-weight-light"><strong> Adventist Hospital</strong> Medical Record</span>
-                <button type="button" class="btn btn-outline-primary float-right">Export PDF</button>
-                <button type="button" class="btn btn-outline-dark float-right mr-2">Send Email</button>
+                <a href="{{url('/MedicalRecord/'.$record->RECORD_ID.'/PDF')}}" type="button" class="btn btn-outline-primary float-right" target="_blank">Export PDF</a>
             </div>
             <hr class="hr hr-blurry" style="border: none; border-bottom: 2px solid gray;" />
 
@@ -148,7 +147,6 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Email</button>
         </div>
         </div>
     </div>

@@ -133,27 +133,6 @@ class ExportPDF extends Controller
         ->where('INVOICEID', '=', $id)
         ->get();
 
-        $getTreatmentPrice = DB::table('treatmentlist')
-        ->select('TREATMENT_PRICE')
-        ->join('treceived','treatmentlist.TREATMENT_ID','=','treceived.TREATMENT_ID')
-        ->where('INVOICEID','=',$id)
-        ->sum('TREATMENT_PRICE');
-        
-        $getMedicinePrice = DB::table('medicine')
-        ->select('MED_PRICE')
-        ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
-        ->where('INVOICEID','=',$id)
-        ->where('ORD_STATUS','=','BOOKED')
-        ->sum('MED_PRICE');
-        
-        $getItemPrice = DB::table('item')
-        ->select('ITEM_PRICE')
-        ->join('invoiceitem','item.ITEM_ID','=','invoiceitem.ITEMID')
-        ->where('INVOICEID','=',$id)
-        ->sum('ITEM_PRICE');
-
-        $totalPrice = $getTreatmentPrice + $getMedicinePrice + $getItemPrice;
-
         $pdf = PDF::loadView('pdf.invoice', [
             'logo' => public_path('logo1.png'),
             'invoice' => $invoice,
@@ -161,11 +140,10 @@ class ExportPDF extends Controller
             'invoiceitem' => $invoiceItem,
             'medicine' => $medicines,
             'treatment' => $treatments,
-            'totalprice' => $totalPrice
         ]);
         $pdf->setPaper('a4', 'portrait');
 
-        return $pdf->stream('PRESCRIPTION '.$id.'.pdf');
+        return $pdf->stream('INVOICE '.$id.'.pdf');
     }
 
     public function paymentRecord($id) 
@@ -182,7 +160,7 @@ class ExportPDF extends Controller
         ]);
         $pdf->setPaper('a7', 'portrait');
 
-        return $pdf->stream('PRESCRIPTION '.$id.'.pdf');
+        return $pdf->stream('RECEIPT '.$id.'.pdf');
     }
 
     public function appointmentRecord($id) 
@@ -208,7 +186,7 @@ class ExportPDF extends Controller
         ]);
         $pdf->setPaper('a7', 'portrait');
 
-        return $pdf->stream('PRESCRIPTION '.$id.'.pdf');
+        return $pdf->stream('APPOINTMENT '.$id.'.pdf');
     }
 
 }

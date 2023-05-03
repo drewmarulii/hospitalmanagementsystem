@@ -49,6 +49,10 @@ class MedicineController extends Controller
         ->where('MEDRECID','=',$recID)
         ->get();
 
+        $orderMedicine = OrderMedicine::where('ORD_STATUS','=','COMPLETED')
+            ->where('MEDRECID','=',$recID)->first();
+        $status = $orderMedicine->ORD_STATUS;
+
         $orderPrice = DB::table('ordermedicine')
         ->select(DB::raw("SUM(MED_PRICE) as TOTAL_PRICE"))
         ->join('medicine','ordermedicine.MEDICINE','=','medicine.MEDICINE_ID')
@@ -63,7 +67,7 @@ class MedicineController extends Controller
         ->first();
 
         return view('dpharmacy.showmedrequest')->with('user', $user)->with('orderMed', $orderMed)->with('orderDetail',$orderDetail)
-            ->with('orderPrice', $orderPrice)->with('paymentStatus', $paymentStatus)->with('recID', $recID);
+            ->with('orderPrice', $orderPrice)->with('paymentStatus', $paymentStatus)->with('recID', $recID)->with('status', $status);
     }
 
     public function preparingOrder($recID)

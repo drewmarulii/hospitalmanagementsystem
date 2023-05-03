@@ -161,7 +161,7 @@ class DashboardController extends Controller
         $today = now()->format('Y-m-d');
         $waitInvoice = Appointment::all()->where('is_invoice', 0)->where('APPOINTMENT_STATUS', 'FINISH');
         $invoice = Invoice::all();
-        $unpaidInvoice = Invoice::all()->where('INVOICE_STATUS', 'UNPAID');
+        $unpaidInvoice = Invoice::all()->where('INVOICE_STATUS', 'WAITING-PAYMENT');
         $paidInvoice = Invoice::all()->where('INVOICE_STATUS', 'PAID');
         $overdueInvoice = Invoice::all()->where('INVOICE_STATUS', 'UNPAID') ->where('INVOICE_DATE','<',$today);
         

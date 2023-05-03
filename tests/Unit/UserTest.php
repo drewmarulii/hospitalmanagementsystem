@@ -43,10 +43,8 @@ class UserTest extends TestCase
     public function testUpdateUserAccount()
     {  
         $user = User::find('20230009');
-
         $user->username = 'andrew123';
         $user->update();
-
         $this->assertEquals('andrew123', $user->username);
     }
 
@@ -54,7 +52,6 @@ class UserTest extends TestCase
     {
         $user = User::find('20230009');
         $user->delete();
-
         $this->assertDatabaseMissing('users', ['userid' => '20230009']);
     }
 

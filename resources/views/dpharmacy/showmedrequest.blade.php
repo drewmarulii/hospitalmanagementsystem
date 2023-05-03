@@ -237,27 +237,29 @@
                 <div class="card-body">
                 <h5 class="mb-2">Summary</h5>
                     <ul class="list-group list-group-flush">
-                    @foreach($orderDetail as $detail)
-                        @if($detail->APPOINTMENT_STATUS=='FINISH')
+                    @if($status=='COMPLETED')
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                             Status
-                            <span>Medicine Ready</span>
+                            <span>Medicine Released</span>
                         </li>
-                        @elseif($detail->APPOINTMENT_STATUS=='FINISH')
-                        <li
-                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                            Status
-                            <span class="text-success">Medicine Released</span>
-                        </li>
-                        @else
-                        <li
-                            class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-                            Status
-                            <span>Medicine Not Ready</span>
-                        </li>
-                        @endif
-                    @endforeach
+                    @else
+                        @foreach($orderDetail as $detail)
+                            @if($detail->APPOINTMENT_STATUS=='FINISH')
+                            <li
+                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                Status
+                                <span>Medicine Ready</span>
+                            </li>
+                            @else
+                            <li
+                                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                                Status
+                                <span>Medicine Not Ready</span>
+                            </li>
+                            @endif
+                        @endforeach
+                    @endif
 
                     <li
                         class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
@@ -274,14 +276,17 @@
                     </li>
                     </ul>
                     <hr>
-                    @foreach($orderDetail as $detail)
-                            <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/preparing') }}" class="btn btn-warning" role="button" aria-pressed="true">Preparing</a>
-                            @if($detail->is_invoice==1)
-                                @if($paymentStatus->INVOICE_STATUS=='PAID')
-                                <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/release') }}" class="btn btn-success" role="button" aria-pressed="true">Release</a>
+                    @if($status=='COMPLETED')
+                    @else
+                        @foreach($orderDetail as $detail)
+                                <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/preparing') }}" class="btn btn-warning" role="button" aria-pressed="true">Preparing</a>
+                                @if($detail->is_invoice==1)
+                                    @if($paymentStatus->INVOICE_STATUS=='PAID')
+                                    <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/release') }}" class="btn btn-success" role="button" aria-pressed="true">Release</a>
+                                    @endif
                                 @endif
-                            @endif
-                    @endforeach
+                        @endforeach
+                    @endif
                 </div>
                 </div>
                 @endforeach
