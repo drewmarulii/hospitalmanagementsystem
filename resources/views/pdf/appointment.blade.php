@@ -156,7 +156,7 @@
     <header class="clearfix">
 
     <div id="company">
-        <h2 class="name"><strong>Adventist Hospital</strong> Receipt</h2>
+        <h2 class="name"><strong>Adventist Hospital</strong> Appointment</h2>
       </div>
       </div>
     </header>
