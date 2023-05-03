@@ -25,3 +25,4 @@ class MedicalRecord extends Model
         });
     }
 }
+

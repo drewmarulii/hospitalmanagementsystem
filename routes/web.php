@@ -18,22 +18,6 @@ use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\InvoiceItemController;
 use App\Http\Controllers\ExportPDF;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
-
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-// Route::get('login',[LoginController::class,'index'])->name('login');
-
 Route::get('/', [LayoutController::class,'index'])->middleware('auth');
 Route::get('/test', [LayoutController::class,'test'])->middleware('auth');
 Route::get('/home', [LayoutController::class,'index'])->middleware('auth');
@@ -54,23 +38,7 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/myprofile', [UserController::class, 'myProfile']);
     Route::get('/myprofile/{userid}/changepassword', [UserController::class, 'changePassword']);
     Route::post('/myprofile/{userid}/changepassword', [UserController::class, 'updateNewPassword']);
-    
-    //Export Medical Record
-    Route::get('/MedicalRecord/{id}/PDF', [ExportPDF::class, 'medicalRecord']);
 
-    //Export Medicine Prescription
-    Route::get('MedicinePrescription/{id}/PDF', [ExportPDF::class, 'medicinePrescription']);
-
-    //Export Invoice
-    Route::get('Invoice/{id}/PDF', [ExportPDF::class, 'invoiceRecord']);
-
-    //Export Receipt
-    Route::get('Payment/{id}/PDF', [ExportPDF::class, 'paymentRecord']);
-
-    //Export Appointment
-    Route::get('Appointment/{id}/PDF', [ExportPDF::class, 'appointmentRecord']);
-
-    //ADMIN PRIVILEGES
     Route::group(['middleware' => ['checkUserLogin:R001']], function() {
         Route::get('/admin', [DashboardController::class, 'adminIndex']);
         //User Account
@@ -97,8 +65,6 @@ Route::group(['middleware' => ['auth']], function() {
         Route::post('createpoly', [PolyController::class, 'store']);
         Route::post('/editclinic/{polyID}', [PolyController::class, 'edit']);
     });
-
-    //RECEPTIONIST PRIVILEGES
     Route::group(['middleware' => ['checkUserLogin:R002']], function() {
         Route::get('/receptionist', [DashboardController::class, 'receptionistIndex']);
         //Patient
@@ -131,8 +97,6 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/physician/{id}', [UserController::class, 'showGetPhysician']);    
         
     });
-
-    //PHYSICIAN PRIVILEGES
     Route::group(['middleware' => ['checkUserLogin:R003']], function() {        
         Route::get('/doctor', [DashboardController::class, 'doctorIndex']);
         //Appointment
@@ -150,8 +114,6 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('medicalSummary/{id}',[MedicalRecordController::class,'summary']);
         Route::get('cancel/{id}',[MedicalRecordController::class,'cancel']);
     });
-
-    //PHARMACY PRIVILEGES
     Route::group(['middleware' => ['checkUserLogin:R004']], function() {
         Route::get('/pharmacy', [DashboardController::class, 'pharmacyIndex']);
         //MedicineOrder
@@ -168,8 +130,6 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/medInstock/{medID}/delete',[MedicineController::class, 'deleteMedicine']);
         Route::get('/medInstock/{medID}/setActive',[MedicineController::class, 'setActive']);
     });
-    
-    //FINANCE PRIVILEGES
     Route::group(['middleware' => ['checkUserLogin:R005']], function() {
         Route::get('/finance', [DashboardController::class, 'financeIndex']);
         //MedicineOrder
@@ -195,5 +155,16 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/invoiceitem/{itemID}/inactivate', [InvoiceItemController::class, 'setInactive']);
         Route::get('/invoiceitem/{itemID}/setActive', [InvoiceItemController::class, 'setActive']);
     });
+
+    //Export Medical Record
+    Route::get('/MedicalRecord/{id}/PDF', [ExportPDF::class, 'medicalRecord']);
+    //Export Medicine Prescription
+    Route::get('MedicinePrescription/{id}/PDF', [ExportPDF::class, 'medicinePrescription']);
+    //Export Invoice
+    Route::get('Invoice/{id}/PDF', [ExportPDF::class, 'invoiceRecord']);
+    //Export Receipt
+    Route::get('Payment/{id}/PDF', [ExportPDF::class, 'paymentRecord']);
+    //Export Appointment
+    Route::get('Appointment/{id}/PDF', [ExportPDF::class, 'appointmentRecord']);
 });
 

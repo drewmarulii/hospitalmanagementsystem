@@ -8,7 +8,6 @@
 <div class="content">
   <div class="container-fluid">
     <div class="row">
-      
         <div class="col-5">
           @if(session('status'))
           <div class="alert alert-success">

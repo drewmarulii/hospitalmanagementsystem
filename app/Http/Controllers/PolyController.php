@@ -14,12 +14,6 @@ class PolyController extends Controller
         $polyclinic = Poly::all();
         return view('admin.polyclinic')->with('polyclinic',$polyclinic)->with('user',$user);
     }
-    
-    public function create()
-    {
-        $polyclinic = Poly::all();
-        return view('admin.polyclinic')->with('polyclinic',$polyclinic);
-    }
 
     public function store(Request $request) 
     {
@@ -28,6 +22,12 @@ class PolyController extends Controller
         $polyclinic->poly_name = $request->poly_name;
         $polyclinic->save();
         return redirect('/polyclinic')->with('status', 'New Role Has Been Added');
+    }
+    
+    public function create()
+    {
+        $polyclinic = Poly::all();
+        return view('admin.polyclinic')->with('polyclinic',$polyclinic);
     }
 
     public function edit(Request $request, $polyID) 
