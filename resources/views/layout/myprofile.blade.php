@@ -104,7 +104,7 @@
                 <p class="mb-0">Account Role</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">{{$user->role_name}}</p>
+                <p class="text-muted mb-0">{{$roleName->role_name}}</p>
               </div>
             </div>
             <hr>
@@ -113,7 +113,7 @@
                 <p class="mb-0">Account Polyclinic</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">{{$user->poly_name}}</p>
+                <p class="text-muted mb-0">{{$polyName->poly_name}}</p>
               </div>
             </div>
             <hr>
