@@ -60,12 +60,6 @@
             </div>
             </div>
             </div>
-            <div class="col-sm">
-            <div class="small-box bg-danger">
-            <div class="inner">
-                <h4>{{$overdueInvoice->count()}}</h4>
-                <p>Overdue Invoice</p>
-            </div>
             <div class="icon">
             <i class="ion ion-android-people"></i>
             </div>
