@@ -163,7 +163,7 @@ class DashboardController extends Controller
         $invoice = Invoice::all();
         $unpaidInvoice = Invoice::all()->where('INVOICE_STATUS', 'WAITING-PAYMENT');
         $paidInvoice = Invoice::all()->where('INVOICE_STATUS', 'PAID');
-        $overdueInvoice = Invoice::all()->where('INVOICE_STATUS', 'WAITING-PAYMENT') ->where('INVOICE_DATE','<',$today);
+        $overdueInvoice = Invoice::all()->where('INVOICE_STATUS', 'WAITING-PAYMENT')->where('INVOICE_DATE','<',$today);
         
         return view ('layout.dashboard.finance')->with('user', $user)->with('invoice', $invoice)->with('waitInvoice', $waitInvoice)
         ->with('unpaidInvoice', $unpaidInvoice)->with('paidInvoice', $paidInvoice)->with('overdueInvoice', $overdueInvoice);
