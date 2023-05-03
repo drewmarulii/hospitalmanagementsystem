@@ -237,7 +237,7 @@
                 <div class="card-body">
                 <h5 class="mb-2">Summary</h5>
                     <ul class="list-group list-group-flush">
-                    @if($status=='COMPLETED')
+                    @if($orderMedicine)
                         <li
                             class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
                             Status
@@ -276,7 +276,7 @@
                     </li>
                     </ul>
                     <hr>
-                    @if($status=='COMPLETED')
+                    @if($orderMedicine)
                     @else
                         @foreach($orderDetail as $detail)
                                 <a href="{{ url('/medOrderID/'.$detail->RECORD_ID.'/preparing') }}" class="btn btn-warning" role="button" aria-pressed="true">Preparing</a>
