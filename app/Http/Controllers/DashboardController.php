@@ -64,16 +64,19 @@ class DashboardController extends Controller
         //Patient By Gender
         $users = Patient::select(DB::raw("COUNT(*) as count"), DB::raw("PAT_RELIGION"))
         ->groupBy(DB::raw("PAT_RELIGION"))
-        ->orderBy('PATIENT_ID','ASC')
+        ->orderBy('PAT_RELIGION','ASC')
         ->pluck('count', 'PAT_RELIGION');
+
         $labels1 = $users->keys();
         $data1 = $users->values();
 
         //Patient By Marital
         $users = Patient::select(DB::raw("COUNT(*) as count"), DB::raw("PAT_MARITALSTAT"))
         ->groupBy(DB::raw("PAT_MARITALSTAT"))
-        ->orderBy('PATIENT_ID','ASC')
+        ->orderBy('PAT_MARITALSTAT','ASC')
         ->pluck('count', 'PAT_MARITALSTAT');
+
+
         $labels2 = $users->keys();
         $data2 = $users->values();
 
