@@ -119,8 +119,9 @@ class DashboardController extends Controller
 
         $users = Appointment::select(DB::raw("COUNT(*) as count"), DB::raw("DATE(created_at) as DATE"))
         ->groupBy(DB::raw("DATE(created_at)"))
-        ->orderBy('APPOINTMENT_ID','ASC')
+        ->orderBy('DATE','ASC')
         ->pluck('count', 'DATE');
+
         $labels = $users->keys();
         $data = $users->values();
 
@@ -152,6 +153,7 @@ class DashboardController extends Controller
         $medicinePack = Medicine::select(DB::raw("COUNT(*) as count"), DB::raw("MED_PACKTYPE"))
         ->groupBy(DB::raw("MED_PACKTYPE"))
         ->pluck('count', 'MED_PACKTYPE');
+
         $labels = $medicinePack->keys();
         $data = $medicinePack->values();
         
