@@ -106,7 +106,7 @@ class InvoiceController extends Controller
         ->count('MED_ORDER_ID');
 
         for ($i = 1; $i <= $countMedicine; $i++) {
-            $hello = OrderMedicine::where(['MEDRECID' => $medrec])->update(['INVOICEID' => $invoiceID]);
+            $hello = OrderMedicine::where(['MEDRECID' => $medrec, 'ORD_STATUS' => 'BOOKED'])->update(['INVOICEID' => $invoiceID]);
         }
         
         $appointment = DB::table('appointments')
@@ -168,6 +168,7 @@ class InvoiceController extends Controller
         ->select('MEDICINE_NAME', 'MED_PRICE', 'MED_ORDER_ID', 'QUANTITY', 'MED_PACKTYPE')
         ->join('ordermedicine','medicine.MEDICINE_ID','=','ordermedicine.MEDICINE')
         ->where('ORD_STATUS','=','BOOKED')
+        ->orWhere('ORD_STATUS','=','COMPLETED')
         ->where('INVOICEID','=',$invID)
         ->get();
         $itemBill = DB::table('item')

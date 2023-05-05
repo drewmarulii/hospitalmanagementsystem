@@ -114,15 +114,21 @@ class MedicineController extends Controller
     {        
         $user = Auth::user();
 
-        $orderMed = OrderMedicine::all()->where('MEDRECID','=',$recID);
-        $orderMed->count();
+        $orderMed = OrderMedicine::all()->where('MEDRECID','=',$recID)->where('ORD_STATUS','=','COMPLETED');
+        $booked = OrderMedicine::all()->where('MEDRECID','=',$recID)->where('ORD_STATUS','=','BOOKED');
+        $unavailable = OrderMedicine::all()->where('MEDRECID','=',$recID)->where('ORD_STATUS','=','UNAVAILABLE');
 
-        if($orderMed->ORD_STATUS = 'BOOKED') {
-            foreach($orderMed as $row) {
-                $row->ORD_STATUS = 'COMPLETED';
-                $row->update();
-            }
+
+        foreach($booked as $row) {
+            $row->ORD_STATUS = 'COMPLETED';
+            $row->update();
         };
+  
+        foreach($unavailable as $row) {
+            $row->ORD_STATUS = 'CANCELLED';
+            $row->update();
+        };
+     
 
         return redirect('/medOrderID/'.$recID)->with('status', 'Medicine Released!');
     }
