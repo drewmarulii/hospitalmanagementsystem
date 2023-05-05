@@ -25,11 +25,12 @@ class DashboardController extends Controller
         $pharmacy = User::all()->where('level', 'R004');
         $finance = User::all()->where('level', 'R005');
 
-        $users = User::select(DB::raw("COUNT(*) as count"), DB::raw("role_name"))
-        ->join('roles','users.level','=','roles.role_id')
-        ->groupBy(DB::raw("role_name"))
-        ->orderBy('userid','ASC')
+        $users = User::select(DB::raw("COUNT(*) as count"), DB::raw("roles.role_name as role_name"), 'users.userid')
+        ->join('roles', 'users.level', '=', 'roles.role_id')
+        ->groupBy('role_name', 'users.userid')
+        ->orderBy('users.userid', 'ASC')
         ->pluck('count', 'role_name');
+
         $labels = $users->keys();
         $data = $users->values();
 
@@ -54,8 +55,9 @@ class DashboardController extends Controller
         //Patient By Gender
         $users = Patient::select(DB::raw("COUNT(*) as count"), DB::raw("PAT_GENDER"))
         ->groupBy(DB::raw("PAT_GENDER"))
-        ->orderBy('PATIENT_ID','ASC')
+        ->orderBy('PAT_GENDER','ASC')
         ->pluck('count', 'PAT_GENDER');
+
         $labels = $users->keys();
         $data = $users->values();
 
