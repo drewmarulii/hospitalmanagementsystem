@@ -188,7 +188,7 @@
             <td class="right">@money($payment->AMOUNT_PAID)</td>
           </tr>
           <tr>
-            <td>Exchange</td>
+            <td>Change</td>
             <td class="right">@money($payment->EXCHANGE)</td>
           </tr>
         </table>

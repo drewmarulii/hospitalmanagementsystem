@@ -81,27 +81,27 @@
                     <div class="col text-right">
                         <div class="row">
                             <h5 class="card-title text-right"><b>Patient Information</b></h5>
-                            <p class="mb-0">{{$patientDetail->PATIENT_ID}}</p>
+                            <p class="mb-0"><strong>PATIENT ID: </strong>{{$patientDetail->PATIENT_ID}}</p>
                         </div>
                         <div class="row">
-                            <p class=" mb-0">{{$patientDetail->PAT_FNAME}} {{$patientDetail->PAT_MNAME}} {{$patientDetail->PAT_LNAME}}</p>
+                            <p class=" mb-0"><strong>NAME: </strong> {{$patientDetail->PAT_FNAME}} {{$patientDetail->PAT_MNAME}} {{$patientDetail->PAT_LNAME}}</p>
                         </div>
                         <div class="row">
-                            <p class=" mb-0">0{{$patientDetail->PAT_PHONENUMBER}}</p>
+                            <p class=" mb-0"><strong>PHONE: </strong> 0{{$patientDetail->PAT_PHONENUMBER}}</p>
                         </div>
                         <div class="row">
-                            <p class=" mb-0">{{$patientDetail->PAT_ADDRESS}}</p>
+                            <p class=" mb-0"><strong>ADDRESS: </strong>{{$patientDetail->PAT_ADDRESS}}</p>
                         </div>
                         <div class="row">
                             <p class=" mb-0">{{$patientDetail->PAT_CITY}}, {{$patientDetail->PAT_COUNTRY}}</p>
-                        </div>
+                        </div>                        
                     </div>
                 </div>
 
                 </div>
                 </div>
                 <hr class="hr hr-blurry" style="border: none; border-bottom: 1px solid gray;" />
-                    <p class="mt-3 mb-3 h5">Invoice Item</p>
+                    <p class="mt-3 mb-3 h5 bg-success p-2">Invoice Item</p>
                     <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -123,7 +123,7 @@
                     </tbody>
                     </table>    
 
-                    <p class="mt-3 mb-3 h5">Treatment Bill</p>
+                    <p class="mt-3 mb-3 h5  bg-success p-2">Treatment Bill</p>
                     <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -145,7 +145,7 @@
                     </tbody>
                     </table>            
 
-                    <p class="mt-3 mb-3 h5">Medicine Bill</p>
+                    <p class="mt-3 mb-3 h5  bg-success p-2">Medicine Bill</p>
                     <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -248,7 +248,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-sm-4">
-                                        <p class="mb-0">Exchange</p>
+                                        <p class="mb-0">Change</p>
                                     </div>
                                     <div class="col-sm-6">
                                         <p class="mb-0 text-right">@money($payment->EXCHANGE)</p>

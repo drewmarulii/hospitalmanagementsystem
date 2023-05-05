@@ -35,12 +35,14 @@ class LayoutController extends Controller
         $users = User::all()->where('level', 'R003');
         $poly = Poly::all()->sortDesc();
         $medicine = Medicine::all();
+        $mdclist = Medicine::all()->sortBy("MEDICINE_NAME");
         
         return view ('test')->with([
             'user' => Auth::user(),
             'users' => $users,
             'poly' => $poly,
-            'medicine' => $medicine
+            'medicine' => $medicine,
+            'mdclist'=> $mdclist
         ]);
     }
 

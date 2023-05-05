@@ -238,10 +238,10 @@ class UserController extends Controller
                         ->where('userid','=',$id)
                         ->get();
 
-        $todayAppointment = Appointment::all()->where('APP_DATE', $today)->where('userid', $id);
-        $inProgress = Appointment::all()->where('APPOINTMENT_STATUS', 'PROGRESS')->where('userid', $id);
-        $finish = Appointment::all()->where('APPOINTMENT_STATUS', 'FINISH')->where('userid', $id);
-        $new = Appointment::all()->where('APPOINTMENT_STATUS', 'NEW')->where('userid', $id);
+        $todayAppointment = Appointment::all()->where('APP_DATE', $today)->where('DOCTOR_ID', $id);
+        $inProgress = Appointment::all()->where('APPOINTMENT_STATUS', 'PROGRESS')->where('DOCTOR_ID', $id);
+        $finish = Appointment::all()->where('APPOINTMENT_STATUS', 'FINISH')->where('DOCTOR_ID', $id);
+        $new = Appointment::all()->where('APPOINTMENT_STATUS', 'NEW')->where('DOCTOR_ID', $id);
 
         return view('breceptionist.showphysician')->with('user',$user)->with('physician', $physician)->with('polyclinic', $polyclinic)  
         ->with('appointment', $appointment)->with('todayAppointment', $todayAppointment)->with('inProgress', $inProgress)

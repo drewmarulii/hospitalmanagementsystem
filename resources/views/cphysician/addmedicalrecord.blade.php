@@ -213,7 +213,7 @@
             </div>
             <div class="card-body">
 
-            <table class="table table-bordered" id="dynamicAddRemove1">
+              <table class="table table-bordered" id="dynamicAddRemove1">
                 <tr>
                     <th style="width:10px;"><button type="button" name="add" id="dynamic-ar1" class="btn btn-primary btn-sm"><i class="fa fa-plus"></button></th>
                     <th style="width:35%;">Medicine Item<span class="text-danger"> *</span></th>
@@ -224,7 +224,7 @@
                 <tr>
                     <td></td>
                     <td>
-                    <select class="form-select" name="MEDICINE_ID[0]" id="category">
+                    <select class="form-select mySelect" name="MEDICINE_ID[0]" id="category">
                         <option hidden>Choose Medicine</option>
                         @foreach ($mdclist as $item)
                         <option value="{{ $item->MEDICINE_ID }}">{{ $item->MEDICINE_NAME }}</option>
@@ -242,13 +242,12 @@
                       </div>
                     </td>
                     <td>
-                      <div id="app">
-                      </div>
+                      <p class="result"></p>
                     </td>
                 </tr>
               </table>
 
-                          
+                                       
             </div>
             <div class="card-footer">
               <!-- Temporary -->
@@ -347,7 +346,7 @@
             '<tr>'+
             '<td><button type="button" class="btn btn-danger btn-sm remove-input-field"><i class="fa fa-trash"></button></td>'+
               '<td>'+
-              '<select class="form-select" name="MEDICINE_ID['+ j +']" id="category['+ j +']">'+
+              '<select class="form-select mySelect" name="MEDICINE_ID['+ j +']" id="category['+ j +']">'+
                   '<option hidden>Choose Medicine</option>'+
                   '@foreach ($mdclist as $item)'+
                   '<option value="{{ $item->MEDICINE_ID }}">{{ $item->MEDICINE_NAME }}</option>'+
@@ -364,10 +363,7 @@
                   '<textarea name="INSTRUCTION['+ j +']" id="addMoreInputFields['+ j +'][instruction]" class="form-control" aria-describedby="basic-addon1" rows="1" required></textarea>'+
                 '</div>'+
               '</td>'+
-              '<td>'+
-                '<div id="app['+ j +']">'+
-                '</div>'+
-              '</td>'+
+              '<td><p class="result"></p></td>'+
           '</tr>'
         );  
     
@@ -378,31 +374,25 @@
 </script>
 
 <script>
-$(document).ready(function() {
-$('#category').on('change', function() {
-  $('#app').empty();
-    var categoryID = $(this).val();
-    if(categoryID) {
-        $.ajax({
-            url: '/getInstock/'+categoryID,
-            type: "GET",
-            data : {"_token":"{{ csrf_token() }}"},
-            dataType: "json",
-            success:function(data)
-            {
-              if(data){
-                $('#app').append('<p>'+ data.MED_INSTOCK + " " + data.MED_PACKTYPE+ '</p>'); 
-            }else{
-                $('#app').empty();
-            }
-          }
+    var selects = document.getElementsByClassName("mySelect");
+
+    for (var i = 0; i < selects.length; i++) {
+        selects[i].addEventListener("change", function() {
+            var selectedOption = this.value;
+            var index = Array.prototype.indexOf.call(selects, this); 
+            var resultCell = this.parentNode.nextElementSibling; 
+            var xmlhttp = new XMLHttpRequest();
+        
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    resultCell.innerHTML = this.responseText;
+                }
+            };
+            
+            xmlhttp.open("GET", "getInstock/" + selectedOption, true);
+            xmlhttp.send();
         });
-    }else{
-      $('#app').empty();
     }
-    i++;
-  });
-});
 </script>
         </div>
       </div>

@@ -102,9 +102,10 @@ Route::group(['middleware' => ['auth']], function() {
         //Appointment
         Route::get('/myAppointment', [AppointmentController::class, 'phyIndex']);
         Route::get('/myQueue', [AppointmentController::class, 'phyQueue']);
-        Route::get('getInstock/{id}', function ($id) {
-            $course = App\Models\Medicine::where('MEDICINE_ID',$id)->first();
-            return response()->json($course);
+            Route::get('getInstock/{id}', function ($id) {
+                $course = App\Models\Medicine::where('MEDICINE_ID',$id)->first();
+                $response = $course->MED_INSTOCK ." ".$course->MED_PACKTYPE;
+                return response($response);
             });
         //MedicalRecord
         Route::get('/myMedicalRecord', [MedicalRecordController::class, 'list']);

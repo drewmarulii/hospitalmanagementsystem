@@ -158,6 +158,12 @@
   .center {
     text-align: center;
   }
+
+  .bg-success {
+    background-color: #5cb85c;
+    padding: 4;
+    color: white;
+  }
     </style>
   </head>
   <body>
@@ -177,14 +183,14 @@
     <div class="row">
       <div class="column">
         <p class="title">Invoice Information</p>
-        <p class="subtitle">{{$invoice->INVOICE_ID}}</p>
-        <p class="subtitle">{{ date('l, d M Y', strtotime($invoice->INVOICE_DATE)) }}</p>
+        <p class="subtitle"><strong>Invoice ID:</strong> {{$invoice->INVOICE_ID}}</p>
+        <p class="subtitle"><strong>Date: </strong> {{ date('l, d M Y', strtotime($invoice->INVOICE_DATE)) }}</p>
       </div>
       <div class="column right">
         <p class="title">Patient Information</p>
-        <p class="subtitle">{{$patient->PATIENT_ID}}</p>
-        <p class="subtitle">{{$patient->PAT_FNAME}} {{$patient->PAT_MNAME}} {{$patient->PAT_LNAME}}</p> 
-        <p class="subtitle">{{$patient->PAT_ADDRESS}}</p> 
+        <p class="subtitle"><strong>PATIENT ID: </strong>{{$patient->PATIENT_ID}}</p>
+        <p class="subtitle"><strong>NAME: </strong>{{$patient->PAT_FNAME}} {{$patient->PAT_MNAME}} {{$patient->PAT_LNAME}}</p> 
+        <p class="subtitle"><strong>ADDRESS: </strong>{{$patient->PAT_ADDRESS}}</p> 
         <p class="subtitle">{{$patient->PAT_CITY}}, {{$patient->PAT_COUNTRY}}</p> 
       </div>
     </div>
@@ -192,7 +198,7 @@
     <div class="row">
         <div class="row">
         <div class="column-12">
-            <p class="title">ADMINISTRATION</p>
+            <p class="title bg-success">ADMINISTRATION</p>
             <table>
                 <tr>
                     <th style="width: 7%;"></th>
@@ -210,7 +216,7 @@
                 @endforeach
             </table>
             <br>
-            <p class="title">TREATMENT</p>
+            <p class="title bg-success">TREATMENT</p>
             <table class="diagnosis">
                 <tr>
                     <th style="width: 7%;"></th>
@@ -228,7 +234,7 @@
                 @endforeach
             </table>
             <br>
-            <p class="title">MEDICINE</p>
+            <p class="title bg-success">MEDICINE</p>
             <table class="diagnosis">
                 <tr>
                     <th style="width: 7%;"></th>
