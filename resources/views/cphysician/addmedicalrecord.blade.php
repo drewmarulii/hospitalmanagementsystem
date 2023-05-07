@@ -256,6 +256,7 @@
             </div>
           </div>
           <!-- End Medicine Request -->
+          <hr style="border: 5px solid black;" />
         <!-- Patient History -->
         <div class="card">
           <div class="card-header text-light bg-info">
@@ -266,28 +267,33 @@
             <div class="col">
               <div class="card-body">
 
-              @foreach($medRECORD as $record)
-              <a type="button" data-toggle="modal" data-target="#medRecApp-{{$record->RECORD_ID}}">
-              <div class="card mr-1" style="width: 12rem;">
-                <div class="card-header bg-warning">
-                  <h5 class="card-title mb-0">{{$record->RECORD_ID}}</h5>
-                </div>
-                <div class="card-body">
-                  <p class="card-text mb-0">Dr. {{$record->user_fname}} {{$record->user_mname}} {{$record->user_lname}}</p>
-                  <p class="card-text"><?php echo(date('d M Y', strtotime($record->APP_DATE))); ?></p>
+              <div class="container-fluid overflow-auto" style="height: 300px;">
+                <div class="row">
+                  <div class="col-md-12">
+                    @foreach($medRECORD as $record)
+                    <a type="button" data-toggle="modal" data-target="#medRecApp-{{$record->RECORD_ID}}">
+                    <div class="card mr-1" style="width: 17rem;">
+                      <div class="card-header bg-warning">
+                        <h5 class="card-title mb-0">{{$record->RECORD_ID}}</h5>
+                      </div>
+                      <div class="card-body">
+                        <p class="card-text mb-0">Dr. {{$record->user_fname}} {{$record->user_mname}} {{$record->user_lname}}</p>
+                        <p class="card-text"><?php echo(date('d M Y', strtotime($record->APP_DATE))); ?></p>
+                      </div>
+                    </div>
+                    </a>
+                    @include('layout.modal')
+                    @endforeach
+                  </div>
                 </div>
               </div>
-              </a>
-              @include('layout.modal')
-              @endforeach
-
               </div>
             </div>
           </div>
 
         </div>
         <!-- End Patient History -->
-
+       
       </div>
     </div>
   </div>

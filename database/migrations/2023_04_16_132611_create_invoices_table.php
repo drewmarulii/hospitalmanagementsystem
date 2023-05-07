@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->string('INVOICE_ID', 20)->primary();
-            $table->date('INVOICE_DATE')->useCurrent();
+            $table->date('INVOICE_DATE')->default(DB::raw('CURRENT_DATE'));
             $table->float('INVOICE_AMOUNT');
             $table->string('INVOICE_STATUS');
             $table->string('PATIENTID', 20);

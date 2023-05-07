@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('medicalrecord', function (Blueprint $table) {
             $table->string('RECORD_ID', 20)->primary();
-            $table->date('MEDREC_DATE')->useCurrent();
+            $table->date('MEDREC_DATE')->default(DB::raw('CURRENT_DATE'));
             $table->float('VS_WEIGHT', 5, 2);
             $table->float('VS_HEIGHT', 7, 2);
             $table->float('VS_TEMPERATURE', 4, 1);
