@@ -310,7 +310,7 @@
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="text/javascript">
+<!-- <script type="text/javascript">
     var i = 0;
     $("#dynamic-ar").click(function () {
         ++i;
@@ -336,6 +336,27 @@
     $(document).on('click', '.remove-input-field', function () {
         $(this).parents('tr').remove();
     });
+</script> -->
+
+<script>
+  function addRowTreat() {
+  var table = document.getElementById("dynamicAddRemove");
+  var rowCount = table.rows.length;
+  var row = table.insertRow(rowCount);
+  var index = rowCount - 1;
+  
+  row.insertCell(0).innerHTML = '<td><button type="button" class="btn btn-danger btn-sm remove-input-field"><i class="fa fa-trash"></button></td>';
+  row.insertCell(1).innerHTML = '<td><select class="form-select" name="TREATMENT_ID['+ index +']" id="addMoreInputFields['+ index +'][treatment]" aria-label="Default select example"><option selected disabled>Treatment Item</option>@foreach($tlist as $treatmentlist)<option value="{{$treatmentlist->TREATMENT_ID}}">{{$treatmentlist->TREATMENT_NAME}}</option>@endforeach</select></td>';
+  row.insertCell(2).innerHTML = '<td><div class="input-group"><textarea name="TREATMENT_DESC['+ index +']" id="addMoreInputFields['+ index +'][treatmentdesc]" class="form-control" aria-describedby="basic-addon1" rows="1"></textarea></div></td>';
+  }
+
+  $(document).on('click', '#dynamic-ar', function () {
+    addRowTreat();
+              });
+              
+  $(document).on('click', '.remove-input-field', function () {
+      $(this).parents('tr').remove();
+  });
 </script>
 
           <script>
