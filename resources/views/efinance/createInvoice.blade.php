@@ -260,7 +260,6 @@
                             </button>
                             </th>
                             <th style="width:50%;">Invoice Item<span class="text-danger"> *</span></th>
-                            <th class="text-right" style="width:17%;"></th>
                         </tr>
                         <tr>
                             <td></td>
@@ -317,7 +316,6 @@
                     '@endforeach'+
                     '</select>'+
                 '</td>'+
-                '<td class="text-right">IDR 16,250.00</td>'+
             '</tr>'
           );
     });
